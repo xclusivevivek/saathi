@@ -1,6 +1,6 @@
-package com.vvsoft.saathi.info.schema;
+package com.vvsoft.saathi.info.schema.model;
 
-import com.vvsoft.saathi.info.schema.field.SimpleField;
+import com.vvsoft.saathi.info.schema.model.field.SimpleField;
 
 import java.util.Collection;
 import java.util.Collections;

@@ -1,4 +1,4 @@
-package com.vvsoft.saathi.info.schema;
+package com.vvsoft.saathi.info.schema.model;
 
 public interface InfoSchema {
     long getId();

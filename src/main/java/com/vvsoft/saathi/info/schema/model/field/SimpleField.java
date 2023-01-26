@@ -1,4 +1,4 @@
-package com.vvsoft.saathi.info.schema.field;
+package com.vvsoft.saathi.info.schema.model.field;
 
 import lombok.Getter;
 

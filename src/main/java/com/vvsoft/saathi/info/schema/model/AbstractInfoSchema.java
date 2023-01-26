@@ -1,4 +1,4 @@
-package com.vvsoft.saathi.info.schema;
+package com.vvsoft.saathi.info.schema.model;
 
 public abstract class AbstractInfoSchema implements InfoSchema{
     private final long id;

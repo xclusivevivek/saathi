@@ -1,7 +1,7 @@
-package com.vvsoft.saathi.info.schema;
+package com.vvsoft.saathi.info.schema.model;
 
-import com.vvsoft.saathi.info.schema.field.FieldType;
-import com.vvsoft.saathi.info.schema.field.SimpleField;
+import com.vvsoft.saathi.info.schema.model.field.FieldType;
+import com.vvsoft.saathi.info.schema.model.field.SimpleField;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
