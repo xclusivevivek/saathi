@@ -3,6 +3,7 @@ package com.vvsoft.saathi.info.schema.dao;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vvsoft.saathi.info.schema.dao.exception.InvalidSchemaFile;
 import com.vvsoft.saathi.info.schema.dao.exception.SchemaAlreadyExistsException;
+import com.vvsoft.saathi.info.schema.dao.exception.SchemaNotFoundException;
 import com.vvsoft.saathi.info.schema.dao.exception.StoragePathInvalidException;
 import com.vvsoft.saathi.info.schema.model.InfoSchema;
 
@@ -37,14 +38,14 @@ public class SchemaFileDao<T extends InfoSchema> implements InfoSchemaDao<T>{
         }
         String newId = UUID.randomUUID().toString();
         try {
-            Path createdFile = createSchemaFile(newId);
+            Path createdFile = Files.createFile(getSchemaFilePath(newId));
             InfoSchema newSchema = schema.copy();
             newSchema.setId(newId);
             schema.setId(newId);
             jsonMapper.writeValue(createdFile.toFile(),newSchema);
             cache.add(newSchema);
         } catch (IOException e) {
-            throw new RuntimeException("Error while creating file",e);
+            throw new StoragePathInvalidException("Error while creating file",e);
         }
 
         return schema;
@@ -63,23 +64,41 @@ public class SchemaFileDao<T extends InfoSchema> implements InfoSchemaDao<T>{
         if(existingSchema.isPresent()){
             try {
                 schema.setId(existingSchema.get().getId());
-                Path schemaFilePath = storagePath.resolve(existingSchema.get().getId() + SCHEMA_SUFFIX);
+                Path schemaFilePath = getSchemaFilePath(existingSchema.get().getId());
                 jsonMapper.writeValue(schemaFilePath.toFile(),schema);
                 cache.remove(existingSchema.get());
                 cache.add(schema.copy());
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new StoragePathInvalidException(e);
             }
+        } else {
+            throw new SchemaNotFoundException(schema.getName());
         }
+
     }
 
     @Override
     public void delete(String id) {
+        Optional<InfoSchema> schemaById = getSchemaById(id);
+        if(schemaById.isEmpty())
+            throw new SchemaNotFoundException(id);
+        Path schemaFilePath = getSchemaFilePath(id);
+        try {
+            Files.delete(schemaFilePath);
+            cache.remove(schemaById.get());
+        } catch (IOException e) {
+            throw new StoragePathInvalidException("Error in deleting file " + schemaFilePath.getFileName());
+        }
+
 
     }
 
     private Optional<InfoSchema> getSchemaByName(String name){
         return cache.stream().filter(infoSchema -> infoSchema.getName().equals(name)).findFirst();
+    }
+
+    private Optional<InfoSchema> getSchemaById(String id){
+        return cache.stream().filter(infoSchema -> infoSchema.getId().equals(id)).findFirst();
     }
 
     private List<InfoSchema> getAllSchemas(Path storagePath) {
@@ -97,7 +116,7 @@ public class SchemaFileDao<T extends InfoSchema> implements InfoSchemaDao<T>{
         }
     }
 
-    private Path createSchemaFile(String newId) throws IOException {
-        return Files.createFile(storagePath.resolve(newId + SCHEMA_SUFFIX));
+    private Path getSchemaFilePath(String newId) {
+        return storagePath.resolve(newId + SCHEMA_SUFFIX);
     }
 }

@@ -1,6 +1,7 @@
 package com.vvsoft.saathi.info.schema.dao;
 
 import com.vvsoft.saathi.info.schema.dao.exception.SchemaAlreadyExistsException;
+import com.vvsoft.saathi.info.schema.dao.exception.SchemaNotFoundException;
 import com.vvsoft.saathi.info.schema.model.InfoSchema;
 import com.vvsoft.saathi.info.schema.model.SimpleSchema;
 import com.vvsoft.saathi.info.schema.model.field.FieldType;
@@ -11,7 +12,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
@@ -55,6 +55,7 @@ class SchemaFileDaoTest {
         String savedId = simpleSchema1.getId();
 
         Optional<InfoSchema> retrievedSchema = dao.read(savedId);
+        Assertions.assertTrue(retrievedSchema.isPresent());
         Assertions.assertEquals("TestSchema",retrievedSchema.get().getName());
     }
 
@@ -67,6 +68,7 @@ class SchemaFileDaoTest {
         String savedId = simpleSchema1.getId();
 
         Optional<InfoSchema> retrievedSchema = dao.read(savedId);
+        Assertions.assertTrue(retrievedSchema.isPresent());
         Assertions.assertEquals("TestSchema",retrievedSchema.get().getName());
     }
 
@@ -92,9 +94,39 @@ class SchemaFileDaoTest {
         simpleSchema1.add(newField);
         dao.update(simpleSchema1);
         Optional<SimpleSchema> readSchema = dao.read(simpleSchema1.getId());
+        Assertions.assertTrue(readSchema.isPresent());
         Assertions.assertTrue(readSchema.get().getFields().contains(newField));
 
     }
+
+    @Test
+    void cantUpdateSchemaIfItDoesNotExists() throws IOException {
+        SchemaFileDao<SimpleSchema> dao = new SchemaFileDao<>(STORAGE_PATH);
+        SimpleSchema simpleSchema1 = new SimpleSchema("TestSchema", List.of(new SimpleField("foo", FieldType.TEXT),
+                new SimpleField("bar", FieldType.NUMBER)));
+        Assertions.assertThrows(SchemaNotFoundException.class,() -> dao.update(simpleSchema1));
+    }
+
+    @Test
+    void cantDeleteSchemaIfItDoesNotExists() throws IOException {
+        SchemaFileDao<SimpleSchema> dao = new SchemaFileDao<>(STORAGE_PATH);
+        SimpleSchema simpleSchema1 = new SimpleSchema("TestSchema", List.of(new SimpleField("foo", FieldType.TEXT),
+                new SimpleField("bar", FieldType.NUMBER)));
+        String id = simpleSchema1.getId();
+        Assertions.assertThrows(SchemaNotFoundException.class,() -> dao.delete(id));
+    }
+
+    @Test
+    void canDeleteSchemaIfItExists() throws IOException, SchemaAlreadyExistsException {
+        SchemaFileDao<SimpleSchema> dao = new SchemaFileDao<>(STORAGE_PATH);
+        SimpleSchema simpleSchema1 = new SimpleSchema("TestSchema", List.of(new SimpleField("foo", FieldType.TEXT),
+                new SimpleField("bar", FieldType.NUMBER)));
+        dao.create(simpleSchema1);
+        dao.delete(simpleSchema1.getId());
+        Optional<SimpleSchema> schema = dao.read(simpleSchema1.getId());
+        Assertions.assertTrue(schema.isEmpty());
+    }
+
 
 
 }
