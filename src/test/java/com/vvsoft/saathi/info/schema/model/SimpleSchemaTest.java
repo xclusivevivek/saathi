@@ -13,15 +13,14 @@ class SimpleSchemaTest {
     @Test
     void createdSchemaHaveIdAndName(){
         List<SimpleField> simpleFields = createFields();
-        SimpleSchema personalInfo = new SimpleSchema(1L, "Personal Info", simpleFields);
+        SimpleSchema personalInfo = new SimpleSchema("Personal Info", simpleFields);
         Assertions.assertEquals("Personal Info",personalInfo.getName());
-        Assertions.assertEquals(1L,personalInfo.getId());
     }
 
     @Test
     void canListSchemaFields(){
         List<SimpleField> simpleFields = createFields();
-        SimpleSchema personalInfo = new SimpleSchema(1L, "Personal Info", simpleFields);
+        SimpleSchema personalInfo = new SimpleSchema("Personal Info", simpleFields);
         Collection<SimpleField> fields = personalInfo.getFields();
         Assertions.assertTrue(fields.containsAll(simpleFields));
     }
@@ -29,7 +28,7 @@ class SimpleSchemaTest {
     @Test
     void checkCannotModifyFields(){
         List<SimpleField> simpleFields = createFields();
-        SimpleSchema personalInfo = new SimpleSchema(1L, "Personal Info", simpleFields);
+        SimpleSchema personalInfo = new SimpleSchema("Personal Info", simpleFields);
         Collection<SimpleField> fields = personalInfo.getFields();
         SimpleField job = new SimpleField("job", FieldType.TEXT);
         Assertions.assertThrows(UnsupportedOperationException.class,() -> fields.add(job));
@@ -38,7 +37,7 @@ class SimpleSchemaTest {
     @Test
     void checkCanAddFields(){
         List<SimpleField> simpleFields = createFields();
-        SimpleSchema personalInfo = new SimpleSchema(1L, "Personal Info", simpleFields);
+        SimpleSchema personalInfo = new SimpleSchema("Personal Info", simpleFields);
         SimpleField job = new SimpleField("job", FieldType.TEXT);
         personalInfo.add(job);
         Assertions.assertTrue(personalInfo.getFields().contains(job));

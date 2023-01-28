@@ -1,5 +1,7 @@
 package com.vvsoft.saathi.info.schema.dao;
 
+import com.vvsoft.saathi.info.schema.dao.exception.SchemaAlreadyExistsException;
+import com.vvsoft.saathi.info.schema.model.InfoSchema;
 import com.vvsoft.saathi.info.schema.model.SimpleSchema;
 import com.vvsoft.saathi.info.schema.model.field.FieldType;
 import com.vvsoft.saathi.info.schema.model.field.SimpleField;
@@ -12,6 +14,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Optional;
 
 class SchemaFileDaoTest {
 
@@ -24,10 +27,74 @@ class SchemaFileDaoTest {
     }
 
     @Test
-    void onCreateFileShouldBeCreatedForSchema() throws IOException {
-        SchemaFileDao<SimpleSchema> fileDao = new SchemaFileDao<>(STORAGE_PATH);
-        fileDao.create(new SimpleSchema(1L,"Personal Info",
-                List.of(new SimpleField("Name", FieldType.TEXT),new SimpleField("Age",FieldType.NUMBER))));
-        Assertions.assertTrue(Files.exists(Path.of(STORAGE_PATH).resolve("1.schema")));
+    void schemaShouldBeCreatedWithIdGenerated() throws IOException, SchemaAlreadyExistsException {
+        SchemaFileDao<InfoSchema> dao = new SchemaFileDao<>(STORAGE_PATH);
+        SimpleSchema simpleSchema = new SimpleSchema("TestScema", List.of(new SimpleField("foo", FieldType.TEXT), new SimpleField("bar", FieldType.NUMBER)));
+        InfoSchema infoSchema = dao.create(simpleSchema);
+        Assertions.assertNotEquals("", infoSchema.getId());
     }
+
+    @Test
+    void duplicateSchemaShouldNotBeCreated() throws IOException, SchemaAlreadyExistsException {
+        SchemaFileDao<InfoSchema> dao = new SchemaFileDao<>(STORAGE_PATH);
+        SimpleSchema simpleSchema1 = new SimpleSchema("TestSchema", List.of(new SimpleField("foo", FieldType.TEXT),
+                new SimpleField("bar", FieldType.NUMBER)));
+        SimpleSchema simpleSchema2 = new SimpleSchema("TestSchema", List.of(new SimpleField("xyz", FieldType.TEXT),
+                new SimpleField("spv", FieldType.NUMBER)));
+        InfoSchema infoSchema = dao.create(simpleSchema1);
+        Assertions.assertNotEquals("", infoSchema.getId());
+        Assertions.assertThrows(SchemaAlreadyExistsException.class,() -> dao.create(simpleSchema2));
+    }
+
+    @Test
+    void canGetExistingSchemaById() throws IOException, SchemaAlreadyExistsException {
+        SchemaFileDao<InfoSchema> dao = new SchemaFileDao<>(STORAGE_PATH);
+        SimpleSchema simpleSchema1 = new SimpleSchema("TestSchema", List.of(new SimpleField("foo", FieldType.TEXT),
+                new SimpleField("bar", FieldType.NUMBER)));
+        dao.create(simpleSchema1);
+        String savedId = simpleSchema1.getId();
+
+        Optional<InfoSchema> retrievedSchema = dao.read(savedId);
+        Assertions.assertEquals("TestSchema",retrievedSchema.get().getName());
+    }
+
+    @Test
+    void canReadExistingSchemaById() throws IOException, SchemaAlreadyExistsException {
+        SchemaFileDao<InfoSchema> dao = new SchemaFileDao<>(STORAGE_PATH);
+        SimpleSchema simpleSchema1 = new SimpleSchema("TestSchema", List.of(new SimpleField("foo", FieldType.TEXT),
+                new SimpleField("bar", FieldType.NUMBER)));
+        dao.create(simpleSchema1);
+        String savedId = simpleSchema1.getId();
+
+        Optional<InfoSchema> retrievedSchema = dao.read(savedId);
+        Assertions.assertEquals("TestSchema",retrievedSchema.get().getName());
+    }
+
+    @Test
+    void cannotReadNonExistingSchemaById() throws IOException, SchemaAlreadyExistsException {
+        SchemaFileDao<InfoSchema> dao = new SchemaFileDao<>(STORAGE_PATH);
+        SimpleSchema simpleSchema1 = new SimpleSchema("TestSchema", List.of(new SimpleField("foo", FieldType.TEXT),
+                new SimpleField("bar", FieldType.NUMBER)));
+        dao.create(simpleSchema1);
+        String savedId = simpleSchema1.getId();
+
+        Optional<InfoSchema> retrievedSchema = dao.read(savedId + "1");
+        Assertions.assertTrue(retrievedSchema.isEmpty());
+    }
+
+    @Test
+    void canUpdateSchema() throws IOException, SchemaAlreadyExistsException {
+        SchemaFileDao<SimpleSchema> dao = new SchemaFileDao<>(STORAGE_PATH);
+        SimpleSchema simpleSchema1 = new SimpleSchema("TestSchema", List.of(new SimpleField("foo", FieldType.TEXT),
+                new SimpleField("bar", FieldType.NUMBER)));
+        dao.create(simpleSchema1);
+        SimpleField newField = new SimpleField("xyz", FieldType.TEXT);
+        simpleSchema1.add(newField);
+        dao.update(simpleSchema1);
+        Optional<SimpleSchema> readSchema = dao.read(simpleSchema1.getId());
+        Assertions.assertTrue(readSchema.get().getFields().contains(newField));
+
+    }
+
+
 }

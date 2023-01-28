@@ -1,6 +1,14 @@
 package com.vvsoft.saathi.info.schema.model;
 
-public interface InfoSchema {
-    long getId();
-    String getName();
+import lombok.Data;
+
+@Data
+public abstract class InfoSchema implements Copyable<InfoSchema>{
+    private String id;
+    private String name;
+
+    protected InfoSchema(String name) {
+        this.id = "";
+        this.name = name;
+    }
 }
