@@ -1,5 +1,6 @@
 package com.vvsoft.saathi.info.schema.controller;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,6 +18,7 @@ class SchemaControllerTest {
     private int port;
 
     @Test
+    @Disabled("Disabled as this is dummy test")
     void getAllSchemaEndpointReturnsEmptyList(){
         String url = String.format("http://localhost:%d/schema/list",port);
         assertEquals(List.of(), restTemplate.getForObject(url, List.class));

@@ -1,11 +1,12 @@
 package com.vvsoft.saathi.entity.dao;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vvsoft.saathi.entity.NamedEntity;
 import com.vvsoft.saathi.entity.dao.exception.EntityAlreadyExistsException;
 import com.vvsoft.saathi.entity.dao.exception.EntityNotFoundException;
 import com.vvsoft.saathi.info.schema.model.Copyable;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Assertions;
@@ -125,13 +126,13 @@ class GenericDaoTest {
         Assertions.assertTrue(entities.contains(entity2));
     }
 
-    @NoArgsConstructor
     public static class NamedEntityTestDouble extends NamedEntity implements Copyable<NamedEntityTestDouble>{
         @Getter
         @Setter
         private String data;
-    
-        public NamedEntityTestDouble(String name) {
+
+        @JsonCreator
+        public NamedEntityTestDouble(@JsonProperty("name") String name) {
             super(name);
         }
 

@@ -15,6 +15,4 @@ public abstract class NamedEntity {
         this.id = "";
         this.name = name;
     }
-
-    protected NamedEntity(){}
 }
