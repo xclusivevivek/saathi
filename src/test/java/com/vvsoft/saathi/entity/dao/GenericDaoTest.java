@@ -1,8 +1,8 @@
-package com.vvsoft.saathi.dao;
+package com.vvsoft.saathi.entity.dao;
 
-import com.vvsoft.saathi.NamedEntity;
-import com.vvsoft.saathi.dao.exception.EntityAlreadyExistsException;
-import com.vvsoft.saathi.dao.exception.EntityNotFoundException;
+import com.vvsoft.saathi.entity.NamedEntity;
+import com.vvsoft.saathi.entity.dao.exception.EntityAlreadyExistsException;
+import com.vvsoft.saathi.entity.dao.exception.EntityNotFoundException;
 import com.vvsoft.saathi.info.schema.model.Copyable;
 import lombok.Getter;
 import lombok.Setter;

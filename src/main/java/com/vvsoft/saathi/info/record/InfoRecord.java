@@ -1,6 +1,6 @@
 package com.vvsoft.saathi.info.record;
 
-import com.vvsoft.saathi.NamedEntity;
+import com.vvsoft.saathi.entity.NamedEntity;
 import com.vvsoft.saathi.info.schema.model.Copyable;
 import lombok.Getter;
 import lombok.Setter;

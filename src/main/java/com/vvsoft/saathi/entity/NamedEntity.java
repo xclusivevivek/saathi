@@ -1,4 +1,4 @@
-package com.vvsoft.saathi;
+package com.vvsoft.saathi.entity;
 
 import lombok.Data;
 

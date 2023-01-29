@@ -1,4 +1,4 @@
-package com.vvsoft.saathi.dao.exception;
+package com.vvsoft.saathi.entity.dao.exception;
 
 public class StoragePathInvalidException extends RuntimeException{
     public StoragePathInvalidException(String message) {

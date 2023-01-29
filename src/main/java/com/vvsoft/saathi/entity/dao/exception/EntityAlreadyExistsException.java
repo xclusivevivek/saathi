@@ -1,4 +1,4 @@
-package com.vvsoft.saathi.dao.exception;
+package com.vvsoft.saathi.entity.dao.exception;
 
 public class EntityAlreadyExistsException extends RuntimeException {
     public EntityAlreadyExistsException(String entityName){

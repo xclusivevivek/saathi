@@ -1,4 +1,4 @@
-package com.vvsoft.saathi.dao.exception;
+package com.vvsoft.saathi.entity.dao.exception;
 
 public class EntityNotFoundException extends RuntimeException {
     public EntityNotFoundException(String schema) {

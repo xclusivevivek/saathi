@@ -1,4 +1,4 @@
-package com.vvsoft.saathi.dao;
+package com.vvsoft.saathi.entity.dao;
 
 import java.util.Optional;
 

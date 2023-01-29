@@ -1,12 +1,12 @@
-package com.vvsoft.saathi.dao;
+package com.vvsoft.saathi.entity.dao;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vvsoft.saathi.NamedEntity;
-import com.vvsoft.saathi.dao.exception.InvalidEntityFile;
-import com.vvsoft.saathi.dao.exception.EntityAlreadyExistsException;
-import com.vvsoft.saathi.dao.exception.EntityNotFoundException;
-import com.vvsoft.saathi.dao.exception.StoragePathInvalidException;
+import com.vvsoft.saathi.entity.NamedEntity;
+import com.vvsoft.saathi.entity.dao.exception.InvalidEntityFile;
+import com.vvsoft.saathi.entity.dao.exception.EntityAlreadyExistsException;
+import com.vvsoft.saathi.entity.dao.exception.EntityNotFoundException;
+import com.vvsoft.saathi.entity.dao.exception.StoragePathInvalidException;
 import com.vvsoft.saathi.info.schema.model.Copyable;
 
 import java.io.IOException;
