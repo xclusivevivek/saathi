@@ -1,9 +1,10 @@
 package com.vvsoft.saathi.info.schema.model;
 
+import com.vvsoft.saathi.NamedEntity;
 import lombok.Data;
 
 @Data
-public abstract class InfoSchema implements Copyable<InfoSchema>{
+public abstract class InfoSchema implements NamedEntity {
     private String id;
     private String name;
 

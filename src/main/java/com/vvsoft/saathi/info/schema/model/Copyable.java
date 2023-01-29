@@ -1,5 +1,5 @@
 package com.vvsoft.saathi.info.schema.model;
 
 public interface Copyable<T> {
-    T copy();
+    <Z extends T> Z copy();
 }

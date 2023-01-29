@@ -2,12 +2,14 @@ package com.vvsoft.saathi.info.record;
 
 import com.vvsoft.saathi.info.schema.model.SimpleSchema;
 import com.vvsoft.saathi.info.schema.model.field.SimpleField;
+import lombok.Getter;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+@Getter
 public class SimpleRecordValue implements RecordValue{
     private final Map<String,Object> values = new HashMap<>();
     private final SimpleSchema infoSchema;
@@ -25,7 +27,7 @@ public class SimpleRecordValue implements RecordValue{
     }
 
     @Override
-    public RecordValue copy() {
+    public SimpleRecordValue copy() {
         SimpleRecordValue recordValue = new SimpleRecordValue(infoSchema.copy());
         recordValue.getValues().putAll(values);
         return recordValue;

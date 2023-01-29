@@ -1,11 +1,11 @@
 package com.vvsoft.saathi.info.record;
 
-import com.vvsoft.saathi.info.schema.model.Copyable;
+import com.vvsoft.saathi.NamedEntity;
 import lombok.Getter;
 import lombok.Setter;
 
 
-public class InfoRecord implements Copyable<InfoRecord> {
+public class InfoRecord implements NamedEntity {
     @Getter
     @Setter
     private String id;
