@@ -1,6 +1,6 @@
 package com.vvsoft.saathi.info.record;
 
-import com.vvsoft.saathi.info.schema.model.SimpleSchema;
+import com.vvsoft.saathi.info.schema.model.InfoSchema;
 import com.vvsoft.saathi.info.schema.model.field.SimpleField;
 import lombok.Getter;
 
@@ -12,9 +12,9 @@ import java.util.Optional;
 @Getter
 public class SimpleRecordValue implements RecordValue{
     private final Map<String,Object> values = new HashMap<>();
-    private final SimpleSchema infoSchema;
+    private final InfoSchema infoSchema;
 
-    private SimpleRecordValue(SimpleSchema infoSchema) {
+    private SimpleRecordValue(InfoSchema infoSchema) {
         this.infoSchema = infoSchema;
     }
 
@@ -22,8 +22,8 @@ public class SimpleRecordValue implements RecordValue{
         return values;
     }
 
-    public static SimpleRecordValueBuilder builder(SimpleSchema simpleSchema){
-        return new SimpleRecordValueBuilder(simpleSchema);
+    public static SimpleRecordValueBuilder builder(InfoSchema infoSchema){
+        return new SimpleRecordValueBuilder(infoSchema);
     }
 
     @Override
@@ -36,11 +36,11 @@ public class SimpleRecordValue implements RecordValue{
     public static class SimpleRecordValueBuilder {
         private final Collection<SimpleField> fields;
         private final Map<String,Object> values = new HashMap<>();
-        private final SimpleSchema schema;
+        private final InfoSchema schema;
 
-        SimpleRecordValueBuilder(SimpleSchema simpleSchema) {
-            this.fields = simpleSchema.getFields();
-            this.schema = simpleSchema;
+        SimpleRecordValueBuilder(InfoSchema infoSchema) {
+            this.fields = infoSchema.getFields();
+            this.schema = infoSchema;
             fields.forEach(field -> values.put(field.getKey(),getDefaultValue(field)));
         }
 

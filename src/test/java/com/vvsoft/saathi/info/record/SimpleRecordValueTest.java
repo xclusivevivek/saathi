@@ -1,6 +1,6 @@
 package com.vvsoft.saathi.info.record;
 
-import com.vvsoft.saathi.info.schema.model.SimpleSchema;
+import com.vvsoft.saathi.info.schema.model.InfoSchema;
 import com.vvsoft.saathi.info.schema.model.field.FieldType;
 import com.vvsoft.saathi.info.schema.model.field.SimpleField;
 import org.junit.jupiter.api.Assertions;
@@ -15,7 +15,7 @@ class SimpleRecordValueTest {
 
     @Test
     void recordShouldBeCreatedWithGivenValuesFromSchema() throws NoSuchFieldException {
-        SimpleSchema schema = new SimpleSchema("Address", List.of(new SimpleField("House No.", FieldType.NUMBER),
+        InfoSchema schema = new InfoSchema("Address", List.of(new SimpleField("House No.", FieldType.NUMBER),
                 new SimpleField("Street", FieldType.TEXT), new SimpleField("Area", FieldType.AMOUNT)));
         SimpleRecordValue recordValue = SimpleRecordValue.builder(schema)
                                 .addValue("House No.","125")
@@ -30,7 +30,7 @@ class SimpleRecordValueTest {
 
     @Test
     void recordShouldNotBeCreatedForFieldNotInSchema(){
-        SimpleSchema schema = new SimpleSchema("Address", List.of(new SimpleField("House No.", FieldType.NUMBER),
+        InfoSchema schema = new InfoSchema("Address", List.of(new SimpleField("House No.", FieldType.NUMBER),
                 new SimpleField("Street", FieldType.TEXT), new SimpleField("Area", FieldType.AMOUNT)));
         Assertions.assertThrows(NoSuchFieldException.class,() -> SimpleRecordValue.builder(schema)
                 .addValue("Area_new","500.6")
@@ -39,7 +39,7 @@ class SimpleRecordValueTest {
 
     @Test
     void recordShouldBeCreatedWithDefaultValueForMissingFields() throws NoSuchFieldException {
-        SimpleSchema schema = new SimpleSchema("Address", List.of(new SimpleField("House No.", FieldType.NUMBER),
+        InfoSchema schema = new InfoSchema("Address", List.of(new SimpleField("House No.", FieldType.NUMBER),
                 new SimpleField("Street", FieldType.TEXT), new SimpleField("Area", FieldType.AMOUNT)));
         SimpleRecordValue recordValue = SimpleRecordValue.builder(schema)
                 .addValue("House No.","125")

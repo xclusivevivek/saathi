@@ -19,7 +19,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class GenericLocalStorageDao<T extends NamedEntity> implements GenericDao<T>{
+public class GenericLocalStorageDao<T extends NamedEntity & Copyable<T>> implements GenericDao<T>{
     public final String entityName;
     private final Path storagePath;
     private final ObjectMapper jsonMapper;
@@ -53,9 +53,6 @@ public class GenericLocalStorageDao<T extends NamedEntity> implements GenericDao
 
         return entity;
     }
-
-
-
 
     public Optional<T> read(String id) {
         return cache.stream().filter(entity -> entity.getId().equals(id)).findAny().map(Copyable::copy);

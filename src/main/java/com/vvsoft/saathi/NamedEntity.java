@@ -1,9 +1,14 @@
 package com.vvsoft.saathi;
 
-import com.vvsoft.saathi.info.schema.model.Copyable;
+import lombok.Data;
 
-public interface NamedEntity extends Copyable<NamedEntity> {
-    String getId();
-    void setId(String id);
-    String getName();
+@Data
+public abstract class NamedEntity {
+    private String id;
+    private String name;
+
+    protected NamedEntity(String name) {
+        this.id = "";
+        this.name = name;
+    }
 }
