@@ -1,9 +1,12 @@
 package com.vvsoft.saathi.info.schema.model.field;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 @Getter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class SimpleField implements Field{
+    @EqualsAndHashCode.Include
     private final String key;
     private final String displayName;
     private final FieldType fieldType;
