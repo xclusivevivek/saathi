@@ -1,5 +1,6 @@
 package com.vvsoft.saathi.entity.dao;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface GenericDao<T> {
@@ -7,4 +8,6 @@ public interface GenericDao<T> {
     Optional<T> read(String id);
     void update(T entity);
     void delete(String id);
+
+    List<T> getAll();
 }

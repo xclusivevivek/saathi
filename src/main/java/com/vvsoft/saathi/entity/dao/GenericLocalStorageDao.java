@@ -27,14 +27,15 @@ public class GenericLocalStorageDao<T extends NamedEntity & Copyable<T>> impleme
 
     public GenericLocalStorageDao(String storagePath, String entityName) throws IOException {
         this.storagePath = Path.of(storagePath);
-        if(!Files.exists(this.storagePath))
-            Files.createDirectories(this.storagePath);
-        jsonMapper = new ObjectMapper();
-        cache.addAll(getAll(this.storagePath));
         this.entityName = entityName;
+        jsonMapper = new ObjectMapper();
+        if(!Files.exists(this.storagePath)) {
+            Files.createDirectories(this.storagePath);
+        }
+        cache.addAll(getAll(this.storagePath));
     }
 
-
+    @Override
     public T create(T entity) {
         if(getEntityByName(entity.getName()).isPresent()){
             throw new EntityAlreadyExistsException(entity.getName());
@@ -53,12 +54,12 @@ public class GenericLocalStorageDao<T extends NamedEntity & Copyable<T>> impleme
 
         return entity;
     }
-
+    @Override
     public Optional<T> read(String id) {
         return cache.stream().filter(entity -> entity.getId().equals(id)).findAny().map(Copyable::copy);
     }
 
-
+    @Override
     public void update(T entity) {
         Optional<T> entityByName = getEntityByName(entity.getName());
         if(entityByName.isPresent()){
@@ -77,7 +78,7 @@ public class GenericLocalStorageDao<T extends NamedEntity & Copyable<T>> impleme
 
     }
 
-
+    @Override
     public void delete(String id) {
         Optional<T> entityById = getEntityById(id);
         if(entityById.isEmpty())
@@ -93,6 +94,11 @@ public class GenericLocalStorageDao<T extends NamedEntity & Copyable<T>> impleme
 
     }
 
+    @Override
+    public List<T> getAll() {
+        return cache.stream().map(Copyable::copy).collect(Collectors.toList());
+    }
+
     private Optional<T> getEntityByName(String name){
         return cache.stream().filter(infoSchema -> infoSchema.getName().equals(name)).findFirst();
     }
@@ -102,8 +108,8 @@ public class GenericLocalStorageDao<T extends NamedEntity & Copyable<T>> impleme
     }
 
     private List<T> getAll(Path storagePath) {
-        try(Stream<Path> files = Files.walk(storagePath)){
-            return files.filter(file -> file.endsWith("." + entityName))
+        try(Stream<Path> files = Files.walk(storagePath,2)){
+            return files.filter(file -> file.toAbsolutePath().toString().endsWith("." + entityName))
                     .map(file -> {
                         try {
                             return jsonMapper.readValue(file.toFile(), new TypeReference<T>() {});
