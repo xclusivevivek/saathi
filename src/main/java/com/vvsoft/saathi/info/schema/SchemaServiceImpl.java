@@ -25,27 +25,26 @@ public class SchemaServiceImpl implements SchemaRepository {
 
     @Override
     public InfoSchema create(InfoSchema schema) {
-        log.info("Creating Schema: {}",schema);
-        return dao.create(schema);
+        InfoSchema infoSchema = dao.create(schema);
+        log.info("Created Schema: {}",infoSchema);
+        return infoSchema;
     }
 
     @Override
     public InfoSchema update(InfoSchema schema) {
-        log.info("Updating Schema: {}",schema);
         dao.update(schema);
+        log.info("Updated Schema: {}",schema);
         return schema;
     }
 
     @Override
     public void delete(String name) {
-        log.info("Deleting Schema with name: {}",name);
         dao.delete(name);
+        log.info("Deleted Schema with name: {}",name);
     }
 
     @Override
     public Optional<InfoSchema> find(String name) {
         return dao.read(name);
     }
-
-
 }

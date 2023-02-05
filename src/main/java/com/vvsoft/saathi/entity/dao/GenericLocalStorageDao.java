@@ -25,14 +25,19 @@ public class GenericLocalStorageDao<T extends NamedEntity & Copyable<T>> impleme
     private final ObjectMapper jsonMapper;
     private final List<T> cache = new ArrayList<>();
 
-    public GenericLocalStorageDao(String storagePath, String entityName) throws IOException {
+    public GenericLocalStorageDao(String storagePath, String entityName,boolean loadOnStartup) throws IOException {
         this.storagePath = Path.of(storagePath);
         this.entityName = entityName;
         jsonMapper = new ObjectMapper();
         if(!Files.exists(this.storagePath)) {
             Files.createDirectories(this.storagePath);
         }
-        cache.addAll(getAll(this.storagePath));
+        if(loadOnStartup)
+            cache.addAll(getAll(this.storagePath));
+    }
+
+    public GenericLocalStorageDao(String storagePath, String entityName) throws IOException {
+        this(storagePath,entityName,true);
     }
 
     @Override
