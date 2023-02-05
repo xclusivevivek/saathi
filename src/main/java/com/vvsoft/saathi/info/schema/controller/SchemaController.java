@@ -1,6 +1,6 @@
 package com.vvsoft.saathi.info.schema.controller;
 
-import com.vvsoft.saathi.info.schema.SchemaService;
+import com.vvsoft.saathi.info.schema.SchemaRepository;
 import com.vvsoft.saathi.info.schema.model.InfoSchema;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,14 +13,14 @@ import java.util.List;
 @RestController
 @RequestMapping(path = "/schema")
 public class SchemaController {
-    private final SchemaService schemaService;
+    private final SchemaRepository schemaRepository;
     @Autowired
-    public SchemaController(SchemaService schemaService) {
-        this.schemaService = schemaService;
+    public SchemaController(SchemaRepository schemaRepository) {
+        this.schemaRepository = schemaRepository;
     }
 
     @GetMapping(path = "/list")
     public @ResponseBody List<InfoSchema> getAllSchema(){
-        return schemaService.getAll();
+        return schemaRepository.findAll();
     }
 }

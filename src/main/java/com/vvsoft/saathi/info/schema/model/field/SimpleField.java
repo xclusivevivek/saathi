@@ -11,6 +11,7 @@ public class SimpleField implements Field{
     @EqualsAndHashCode.Include
     private final String key;
     private final String displayName;
+    @EqualsAndHashCode.Include
     private final FieldType fieldType;
 
     @JsonCreator

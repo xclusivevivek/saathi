@@ -5,9 +5,9 @@ import java.util.Optional;
 
 public interface GenericDao<T> {
     T create(T entity);
-    Optional<T> read(String id);
+    Optional<T> read(String name);
     void update(T entity);
-    void delete(String id);
+    void delete(String name);
 
     List<T> getAll();
 }

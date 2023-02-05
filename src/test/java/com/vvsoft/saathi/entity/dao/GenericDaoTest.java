@@ -6,16 +6,14 @@ import com.vvsoft.saathi.entity.NamedEntity;
 import com.vvsoft.saathi.entity.dao.exception.EntityAlreadyExistsException;
 import com.vvsoft.saathi.entity.dao.exception.EntityNotFoundException;
 import com.vvsoft.saathi.info.schema.model.Copyable;
+import com.vvsoft.saathi.test.util.StorageUtil;
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,9 +24,7 @@ class GenericDaoTest {
 
     @BeforeEach
     public void setup() throws IOException {
-        Path storage = Path.of(STORAGE_PATH);
-        if(Files.exists(storage))
-            FileUtils.cleanDirectory(storage.toFile());
+        StorageUtil.clearDirectory(STORAGE_PATH);
         genericDao = new GenericLocalStorageDao<>(STORAGE_PATH, "entity");
     }
 
@@ -49,23 +45,23 @@ class GenericDaoTest {
     }
 
     @Test
-    void canGetExistingEntityById() throws EntityAlreadyExistsException {
+    void canGetExistingEntityByName() throws EntityAlreadyExistsException {
         NamedEntityTestDouble entity1 = new NamedEntityTestDouble("TestEntity", "foo");
         genericDao.create(entity1);
-        String savedId = entity1.getId();
+        String savedName = entity1.getName();
 
-        Optional<NamedEntityTestDouble> retrievedEntity = genericDao.read(savedId);
+        Optional<NamedEntityTestDouble> retrievedEntity = genericDao.read(savedName);
         Assertions.assertTrue(retrievedEntity.isPresent());
         Assertions.assertEquals("TestEntity",retrievedEntity.get().getName());
     }
 
     @Test
-    void canReadExistingEntityById() throws EntityAlreadyExistsException {
+    void canReadExistingEntityByName() throws EntityAlreadyExistsException {
         NamedEntityTestDouble entity1 = new NamedEntityTestDouble("TestEntity", "foo");
         genericDao.create(entity1);
-        String savedId = entity1.getId();
+        String savedName = entity1.getName();
 
-        Optional<NamedEntityTestDouble> retrievedEntity = genericDao.read(savedId);
+        Optional<NamedEntityTestDouble> retrievedEntity = genericDao.read(savedName);
         Assertions.assertTrue(retrievedEntity.isPresent());
         Assertions.assertEquals("TestEntity",retrievedEntity.get().getName());
     }
@@ -86,7 +82,7 @@ class GenericDaoTest {
         genericDao.create(entity1);
         entity1.setData("bar");
         genericDao.update(entity1);
-        Optional<NamedEntityTestDouble> readEntity = genericDao.read(entity1.getId());
+        Optional<NamedEntityTestDouble> readEntity = genericDao.read(entity1.getName());
         Assertions.assertTrue(readEntity.isPresent());
         Assertions.assertEquals("bar",readEntity.get().getData());
 
@@ -109,7 +105,7 @@ class GenericDaoTest {
     void canDeleteEntityIfItExists() throws EntityAlreadyExistsException {
         NamedEntityTestDouble entity1 = new NamedEntityTestDouble("TestEntity", "foo");
         genericDao.create(entity1);
-        genericDao.delete(entity1.getId());
+        genericDao.delete(entity1.getName());
         Optional<NamedEntityTestDouble> schema = genericDao.read(entity1.getId());
         Assertions.assertTrue(schema.isEmpty());
     }

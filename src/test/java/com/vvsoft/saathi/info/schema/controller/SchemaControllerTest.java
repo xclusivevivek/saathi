@@ -17,6 +17,8 @@ class SchemaControllerTest {
     @Value("${local.server.port}")
     private int port;
 
+
+
     @Test
     @Disabled("Disabled as this is dummy test")
     void getAllSchemaEndpointReturnsEmptyList(){

@@ -55,8 +55,8 @@ public class GenericLocalStorageDao<T extends NamedEntity & Copyable<T>> impleme
         return entity;
     }
     @Override
-    public Optional<T> read(String id) {
-        return cache.stream().filter(entity -> entity.getId().equals(id)).findAny().map(Copyable::copy);
+    public Optional<T> read(String name) {
+        return cache.stream().filter(entity -> entity.getName().equals(name)).findAny().map(Copyable::copy);
     }
 
     @Override
@@ -79,14 +79,14 @@ public class GenericLocalStorageDao<T extends NamedEntity & Copyable<T>> impleme
     }
 
     @Override
-    public void delete(String id) {
-        Optional<T> entityById = getEntityById(id);
-        if(entityById.isEmpty())
-            throw new EntityNotFoundException(id);
-        Path entityFilePath = getEntityFilePath(id);
+    public void delete(String entityName) {
+        Optional<T> foundEntity = getEntityByName(entityName);
+        if(foundEntity.isEmpty())
+            throw new EntityNotFoundException(entityName);
+        Path entityFilePath = getEntityFilePath(foundEntity.get().getId());
         try {
             Files.delete(entityFilePath);
-            cache.remove(entityById.get());
+            cache.remove(foundEntity.get());
         } catch (IOException e) {
             throw new StoragePathInvalidException("Error in deleting file " + entityFilePath.getFileName());
         }
@@ -101,10 +101,6 @@ public class GenericLocalStorageDao<T extends NamedEntity & Copyable<T>> impleme
 
     private Optional<T> getEntityByName(String name){
         return cache.stream().filter(infoSchema -> infoSchema.getName().equals(name)).findFirst();
-    }
-
-    private Optional<T> getEntityById(String id){
-        return cache.stream().filter(infoSchema -> infoSchema.getId().equals(id)).findFirst();
     }
 
     private List<T> getAll(Path storagePath) {
