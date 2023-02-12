@@ -1,8 +1,8 @@
 package com.vvsoft.saathi.entity.dao.exception;
 
 public class EntityNotFoundException extends RuntimeException {
-    public EntityNotFoundException(String schema) {
-        super(String.format("Schema %s not found",schema));
+    public EntityNotFoundException(String entityName) {
+        super(String.format("Entity %s not found",entityName));
     }
 
 }

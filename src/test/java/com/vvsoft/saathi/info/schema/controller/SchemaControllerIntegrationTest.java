@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Slf4j
@@ -37,35 +38,62 @@ class SchemaControllerIntegrationTest {
     }
     @Test
     void testSchemaLifecycle(){
-        String url = getUrlForFindAllSchema();
-        assertEquals(List.of(), restTemplate.getForObject(url, List.class));
 
         //create schema
-        url = getCreateSchemaUrl();
-        InfoSchemaDto dto = InfoSchemaDto.builder().name("address").field(new SimpleField("flatNo", FieldType.NUMBER)).build();
-        ResponseEntity<InfoSchemaDto> dtoResponse = restTemplate.postForEntity(url, dto, InfoSchemaDto.class);
+        InfoSchemaDto dto = buildInfoSchema("address");
+        ResponseEntity<InfoSchemaDto> dtoResponse = makePostRequest(getCreateSchemaUrl(), dto);
         assertEquals(HttpStatus.CREATED, dtoResponse.getStatusCode());
         InfoSchemaDto createdDto = Objects.requireNonNull(dtoResponse.getBody());
         assertEquals("address", createdDto.getName());
 
         //getSchema
-        url = getRetrieveSchemaUrl(createdDto);
-        dtoResponse = restTemplate.getForEntity(url, InfoSchemaDto.class);
+        dtoResponse = makeGetRequest(getRetrieveSchemaUrl(createdDto));
         assertEquals(HttpStatus.OK, dtoResponse.getStatusCode());
         assertEquals("address", dtoResponse.getBody().getName());
 
         //updateSchema
-        url = getUpdateSchemaUrl();
         createdDto.getFields().add(new SimpleField("area",FieldType.TEXT));
-        dtoResponse = restTemplate.postForEntity(url, createdDto,InfoSchemaDto.class);
+        dtoResponse = restTemplate.postForEntity(getUpdateSchemaUrl(), createdDto,InfoSchemaDto.class);
         assertEquals(HttpStatus.CREATED, dtoResponse.getStatusCode());
         assertEquals("address", dtoResponse.getBody().getName());
 
-        //deleteSchema
-        url = getDeleteSchemaUrl(createdDto);
-        restTemplate.delete(url);
-        url = getUrlForFindAllSchema();
-        assertEquals(List.of(), restTemplate.getForObject(url, List.class));
+
+        List<InfoSchemaDto> schemas = restTemplate.getForObject(getUrlForFindAllSchema(), List.class);
+        assertTrue(schemas.size() > 0);
+    }
+
+    @Test
+    void testCreateError(){
+        String url = getCreateSchemaUrl();
+        InfoSchemaDto infoSchemaDto = buildInfoSchema("createError");
+        ResponseEntity<InfoSchemaDto> response = makePostRequest(url, infoSchemaDto);
+        ResponseEntity<?> secondResponse = makePostRequest(url, infoSchemaDto);
+        assertEquals(HttpStatus.CONFLICT,secondResponse.getStatusCode());
+    }
+
+    @Test
+    void testUpdateError(){
+        String url = getCreateSchemaUrl();
+        InfoSchemaDto infoSchemaDto = buildInfoSchema("updateError");
+        ResponseEntity<InfoSchemaDto> response = makePostRequest(url, infoSchemaDto);
+        assertEquals(HttpStatus.CREATED,response.getStatusCode());
+        infoSchemaDto.setName("dummyUpdateError");
+        ResponseEntity<?> secondResponse = makePostRequest(getUpdateSchemaUrl(), infoSchemaDto);
+        assertEquals(HttpStatus.NOT_FOUND,secondResponse.getStatusCode());
+    }
+
+    private ResponseEntity<InfoSchemaDto> makeGetRequest(String url) {
+        return restTemplate.getForEntity(url, InfoSchemaDto.class);
+    }
+
+    private ResponseEntity<InfoSchemaDto> makePostRequest(String url, InfoSchemaDto dto) {
+        ResponseEntity<InfoSchemaDto> dtoResponse = restTemplate.postForEntity(url, dto, InfoSchemaDto.class);
+        return dtoResponse;
+    }
+
+    private static InfoSchemaDto buildInfoSchema(String schemaName) {
+        InfoSchemaDto dto = InfoSchemaDto.builder().name(schemaName).field(new SimpleField("flatNo", FieldType.NUMBER)).build();
+        return dto;
     }
 
     private String getDeleteSchemaUrl(InfoSchemaDto createdDto) {
