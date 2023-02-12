@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(path = "/schema")
@@ -21,8 +22,8 @@ public class SchemaController {
     }
 
     @GetMapping()
-    public @ResponseBody List<InfoSchema> getAllSchema(){
-        return schemaRepository.findAll();
+    public List<InfoSchemaDto> getAllSchema(){
+        return schemaRepository.findAll().stream().map(InfoSchemaDto::fromSchema).collect(Collectors.toList());
     }
 
     @GetMapping(path = "/get/{name}")
@@ -33,22 +34,22 @@ public class SchemaController {
     }
 
     @PostMapping(path = "/create")
-    public ResponseEntity<InfoSchemaDto> createSchema(@RequestBody InfoSchemaDto infoSchemaDto){
+    @ResponseStatus(HttpStatus.CREATED)
+    public InfoSchemaDto createSchema(@RequestBody InfoSchemaDto infoSchemaDto){
         InfoSchema infoSchema = schemaRepository.create(infoSchemaDto.toSchema());
-        InfoSchemaDto response = InfoSchemaDto.fromSchema(infoSchema);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        return InfoSchemaDto.fromSchema(infoSchema);
     }
 
     @PostMapping(path = "/update")
-    public ResponseEntity<InfoSchemaDto> updateSchema(@RequestBody InfoSchemaDto infoSchemaDto){
+    @ResponseStatus(HttpStatus.CREATED)
+    public InfoSchemaDto updateSchema(@RequestBody InfoSchemaDto infoSchemaDto){
         InfoSchema infoSchema = schemaRepository.update(infoSchemaDto.toSchema());
-        InfoSchemaDto response = InfoSchemaDto.fromSchema(infoSchema);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        return InfoSchemaDto.fromSchema(infoSchema);
     }
 
     @DeleteMapping(path = "/delete/{name}")
-    public ResponseEntity<Void> updateSchema(@PathVariable String name){
+    @ResponseStatus(HttpStatus.OK)
+    public void updateSchema(@PathVariable String name){
         schemaRepository.delete(name);
-        return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 }
