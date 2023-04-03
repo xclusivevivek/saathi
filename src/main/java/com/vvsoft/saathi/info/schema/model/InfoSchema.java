@@ -5,10 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vvsoft.saathi.entity.NamedEntity;
 import com.vvsoft.saathi.info.schema.model.field.SimpleField;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class InfoSchema extends NamedEntity implements Copyable<InfoSchema>{
     private final Set<SimpleField> fields = new HashSet<>();
@@ -22,8 +19,8 @@ public class InfoSchema extends NamedEntity implements Copyable<InfoSchema>{
         return Collections.unmodifiableCollection(fields);
     }
 
-    public void add(SimpleField job) {
-        fields.add(job);
+    public void add(SimpleField field) {
+        fields.add(field);
     }
 
 
@@ -33,4 +30,9 @@ public class InfoSchema extends NamedEntity implements Copyable<InfoSchema>{
         infoSchema.setId(this.getId());
         return infoSchema;
     }
+
+    public Optional<SimpleField> getFieldByKey(String key){
+        return fields.stream().filter(field -> field.getKey().equals(key)).findFirst();
+    }
+
 }

@@ -8,17 +8,17 @@ import lombok.Setter;
 
 public class InfoRecord extends NamedEntity implements Copyable<InfoRecord> {
     @Getter
-    @Setter
-    private RecordValue recordValue;
+    private final RecordValue recordValue;
 
-    public InfoRecord(String name) {
+    public InfoRecord(String name,RecordValue recordValue) {
         super(name);
+        this.recordValue = recordValue;
     }
+
+
 
     @Override
     public InfoRecord copy() {
-        InfoRecord infoRecord = new InfoRecord(this.getName());
-        infoRecord.setRecordValue(recordValue.copy());
-        return infoRecord;
+        return new InfoRecord(this.getName(),recordValue.copy());
     }
 }

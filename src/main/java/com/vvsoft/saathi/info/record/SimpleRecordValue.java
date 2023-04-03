@@ -19,7 +19,27 @@ public class SimpleRecordValue implements RecordValue{
     }
 
     public Map<String,Object> getValues(){
-        return values;
+        return new HashMap<>(values);
+    }
+
+    void setValues(Map<String,Object> values){
+        this.values.putAll(values);
+    }
+
+    @Override
+    public Optional<Object> getValue(String field){
+        if(values.containsKey(field)){
+            return Optional.of(values.get(field));
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public void update(String field, String value) throws NoSuchFieldException {
+        Optional<SimpleField> fieldFound = infoSchema.getFieldByKey(field);
+        if(fieldFound.isEmpty())
+            throw new NoSuchFieldException("Field not found:" + field);
+        values.put(field,fieldFound.get().getFieldType().convertToActualType(value));
     }
 
     public static SimpleRecordValueBuilder builder(InfoSchema infoSchema){
@@ -29,55 +49,36 @@ public class SimpleRecordValue implements RecordValue{
     @Override
     public SimpleRecordValue copy() {
         SimpleRecordValue recordValue = new SimpleRecordValue(infoSchema.copy());
-        recordValue.getValues().putAll(values);
+        recordValue.setValues(values);
         return recordValue;
     }
 
     public static class SimpleRecordValueBuilder {
-        private final Collection<SimpleField> fields;
         private final Map<String,Object> values = new HashMap<>();
         private final InfoSchema schema;
 
         SimpleRecordValueBuilder(InfoSchema infoSchema) {
-            this.fields = infoSchema.getFields();
             this.schema = infoSchema;
+            Collection<SimpleField> fields = infoSchema.getFields();
             fields.forEach(field -> values.put(field.getKey(),getDefaultValue(field)));
         }
 
         public SimpleRecordValueBuilder addValue(String key, String value) throws NoSuchFieldException {
-            Optional<SimpleField> fieldFound = fields.stream().filter(field -> field.getKey().equals(key)).findFirst();
+            Optional<SimpleField> fieldFound = schema.getFieldByKey(key);
             if(fieldFound.isEmpty())
                 throw new NoSuchFieldException("Field not found:" + key);
-
-            switch (fieldFound.get().getFieldType()) {
-                case TEXT:
-                    values.put(key, value);
-                    break;
-                case NUMBER:
-                    values.put(key, Long.valueOf(value));
-                    break;
-                case AMOUNT:
-                    values.put(key, Double.valueOf(value));
-            }
+            values.put(key,fieldFound.get().getFieldType().convertToActualType(value));
             return this;
         }
 
         private Object getDefaultValue(SimpleField field){
-            switch (field.getFieldType()) {
-                case TEXT:
-                    return "";
-                case NUMBER:
-                    return 0L;
-                case AMOUNT:
-                    return 0.0;
-            }
-            return null;
+            return field.getFieldType().getDefault();
         }
 
 
         public SimpleRecordValue build(){
             SimpleRecordValue simpleRecordValue = new SimpleRecordValue(schema);
-            simpleRecordValue.getValues().putAll(values);
+            simpleRecordValue.setValues(values);
             return simpleRecordValue;
         }
 
