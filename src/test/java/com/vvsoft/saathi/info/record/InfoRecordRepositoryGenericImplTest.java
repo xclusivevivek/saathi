@@ -39,7 +39,7 @@ class InfoRecordRepositoryGenericImplTest {
     }
 
     @Test
-    void canCreateRecord() throws NoSuchFieldException {
+    void canCreateRecord(){
         SimpleRecordValue recordValue = SimpleRecordValue.builder(schemaProvider.get()).addValue("Name","bar").addValue("Age","20").
                 build();
         InfoRecord infoRecord = new InfoRecord("Foo",recordValue);
@@ -49,7 +49,7 @@ class InfoRecordRepositoryGenericImplTest {
     }
 
     @Test
-    void cannotCreateRecordIfAlreadyExists() throws NoSuchFieldException {
+    void cannotCreateRecordIfAlreadyExists(){
         SimpleRecordValue recordValue = SimpleRecordValue.builder(schemaProvider.get()).addValue("Name","bar").addValue("Age","26").
                 build();
         InfoRecord infoRecord = new InfoRecord("BarDetails",recordValue);
@@ -60,7 +60,7 @@ class InfoRecordRepositoryGenericImplTest {
     }
 
     @Test
-    void canFindExistingInfoSchema() throws NoSuchFieldException {
+    void canFindExistingInfoSchema(){
         SimpleRecordValue recordValue = SimpleRecordValue.builder(schemaProvider.get()).addValue("Name","SavedEntity").addValue("Age","1").
                 build();
         String recordName = "ExistingDetails";
@@ -97,7 +97,7 @@ class InfoRecordRepositoryGenericImplTest {
     }
 
     @Test
-    void canDeleteExistingInfoSchema() throws NoSuchFieldException {
+    void canDeleteExistingInfoSchema(){
         SimpleRecordValue recordValue = SimpleRecordValue.builder(schemaProvider.get()).addValue("Name","SavedEntity").addValue("Age","1").
                 build();
         String recordName = "EntityForDelete";
@@ -109,7 +109,7 @@ class InfoRecordRepositoryGenericImplTest {
     }
 
     @Test
-    void cannotDeleteNonExistingInfoSchema() throws NoSuchFieldException {
+    void cannotDeleteNonExistingInfoSchema(){
         String recordName = "EntityForUpdateWithoutCreate";
         assertThrows(EntityNotFoundException.class,() -> infoRecordRepository.delete(recordName));
     }

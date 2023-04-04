@@ -35,13 +35,11 @@ public class SchemaRestTestClient {
     }
 
     private static InfoSchemaDto buildInfoSchema(String schemaName) {
-        InfoSchemaDto dto = InfoSchemaDto.builder().name(schemaName).field(new SimpleField("flatNo", FieldType.NUMBER)).build();
-        return dto;
+        return InfoSchemaDto.builder().name(schemaName).field(new SimpleField("flatNo", FieldType.NUMBER)).build();
     }
 
     private ResponseEntity<InfoSchemaDto> makePostRequest(String url, InfoSchemaDto dto) {
-        ResponseEntity<InfoSchemaDto> dtoResponse = restTemplate.postForEntity(url, dto, InfoSchemaDto.class);
-        return dtoResponse;
+        return restTemplate.postForEntity(url, dto, InfoSchemaDto.class);
     }
 
     private String getCreateSchemaUrl() {

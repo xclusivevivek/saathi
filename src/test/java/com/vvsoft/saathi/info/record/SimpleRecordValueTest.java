@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class SimpleRecordValueTest {
 
     @Test
-    void recordShouldBeCreatedWithGivenValuesFromSchema() throws NoSuchFieldException {
+    void recordShouldBeCreatedWithGivenValuesFromSchema() {
         InfoSchema schema = new InfoSchema("Address", List.of(new SimpleField("House No.", FieldType.NUMBER),
                 new SimpleField("Street", FieldType.TEXT), new SimpleField("Area", FieldType.AMOUNT)));
         SimpleRecordValue recordValue = SimpleRecordValue.builder(schema)
@@ -41,7 +41,7 @@ class SimpleRecordValueTest {
     }
 
     @Test
-    void recordShouldBeCreatedWithDefaultValueForMissingFields() throws NoSuchFieldException {
+    void recordShouldBeCreatedWithDefaultValueForMissingFields(){
         InfoSchema schema = new InfoSchema("Address", List.of(new SimpleField("House No.", FieldType.NUMBER),
                 new SimpleField("Street", FieldType.TEXT), new SimpleField("Area", FieldType.AMOUNT)));
         SimpleRecordValue recordValue = SimpleRecordValue.builder(schema)
@@ -55,7 +55,7 @@ class SimpleRecordValueTest {
     }
 
     @Test
-    void recordShouldBeCreatedWithBulkValuesFromSchema() throws NoSuchFieldException {
+    void recordShouldBeCreatedWithBulkValuesFromSchema(){
         InfoSchema schema = new InfoSchema("Address", List.of(new SimpleField("House No.", FieldType.NUMBER),
                 new SimpleField("Street", FieldType.TEXT), new SimpleField("Area", FieldType.AMOUNT)));
         Map<String,String> values = new HashMap<>();
