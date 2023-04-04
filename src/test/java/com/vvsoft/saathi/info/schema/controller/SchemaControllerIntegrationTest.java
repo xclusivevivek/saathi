@@ -3,10 +3,13 @@ package com.vvsoft.saathi.info.schema.controller;
 import com.vvsoft.saathi.info.schema.dto.InfoSchemaDto;
 import com.vvsoft.saathi.info.schema.model.field.FieldType;
 import com.vvsoft.saathi.info.schema.model.field.SimpleField;
+import com.vvsoft.saathi.test.util.SchemaRestTestClient;
 import com.vvsoft.saathi.test.util.StorageUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Slf4j
 class SchemaControllerIntegrationTest {
     @Autowired
@@ -32,6 +36,13 @@ class SchemaControllerIntegrationTest {
     @Value("${app.schema.storage.path}")
     private String storagePath;
 
+    private SchemaRestTestClient schemaRestClient;
+
+    @BeforeAll
+    public void init(){
+        schemaRestClient = new SchemaRestTestClient(restTemplate,port);
+    }
+
     @AfterEach
     void cleanUpTest() throws IOException {
         StorageUtil.clearDirectory(storagePath);
@@ -40,80 +51,47 @@ class SchemaControllerIntegrationTest {
     void testSchemaLifecycle(){
 
         //create schema
-        InfoSchemaDto dto = buildInfoSchema("address");
-        ResponseEntity<InfoSchemaDto> dtoResponse = makePostRequest(getCreateSchemaUrl(), dto);
+        ResponseEntity<InfoSchemaDto> dtoResponse = schemaRestClient.createTestSchema("address");
         assertEquals(HttpStatus.CREATED, dtoResponse.getStatusCode());
         InfoSchemaDto createdDto = Objects.requireNonNull(dtoResponse.getBody());
         assertEquals("address", createdDto.getName());
 
         //getSchema
-        dtoResponse = makeGetRequest(getRetrieveSchemaUrl(createdDto));
+        dtoResponse = schemaRestClient.getSchema(createdDto.getName());
         assertEquals(HttpStatus.OK, dtoResponse.getStatusCode());
         assertEquals("address", dtoResponse.getBody().getName());
 
         //updateSchema
         createdDto.getFields().add(new SimpleField("area",FieldType.TEXT));
-        dtoResponse = restTemplate.postForEntity(getUpdateSchemaUrl(), createdDto,InfoSchemaDto.class);
+        dtoResponse = schemaRestClient.updateTestSchema(createdDto);
         assertEquals(HttpStatus.CREATED, dtoResponse.getStatusCode());
         assertEquals("address", dtoResponse.getBody().getName());
 
 
-        List<InfoSchemaDto> schemas = restTemplate.getForObject(getUrlForFindAllSchema(), List.class);
+        List<InfoSchemaDto> schemas = schemaRestClient.getAll();
         assertTrue(schemas.size() > 0);
     }
 
     @Test
     void testCreateError(){
-        String url = getCreateSchemaUrl();
-        InfoSchemaDto infoSchemaDto = buildInfoSchema("createError");
-        ResponseEntity<InfoSchemaDto> response = makePostRequest(url, infoSchemaDto);
-        ResponseEntity<?> secondResponse = makePostRequest(url, infoSchemaDto);
+        schemaRestClient.createTestSchema("createError");
+        ResponseEntity<InfoSchemaDto> secondResponse = schemaRestClient.createTestSchema("createError");
         assertEquals(HttpStatus.CONFLICT,secondResponse.getStatusCode());
     }
 
     @Test
     void testUpdateError(){
-        String url = getCreateSchemaUrl();
-        InfoSchemaDto infoSchemaDto = buildInfoSchema("updateError");
-        ResponseEntity<InfoSchemaDto> response = makePostRequest(url, infoSchemaDto);
+        ResponseEntity<InfoSchemaDto> response = schemaRestClient.createTestSchema("updateError");
         assertEquals(HttpStatus.CREATED,response.getStatusCode());
+        InfoSchemaDto infoSchemaDto = response.getBody();
         infoSchemaDto.setName("dummyUpdateError");
-        ResponseEntity<?> secondResponse = makePostRequest(getUpdateSchemaUrl(), infoSchemaDto);
-        assertEquals(HttpStatus.NOT_FOUND,secondResponse.getStatusCode());
-    }
-
-    private ResponseEntity<InfoSchemaDto> makeGetRequest(String url) {
-        return restTemplate.getForEntity(url, InfoSchemaDto.class);
-    }
-
-    private ResponseEntity<InfoSchemaDto> makePostRequest(String url, InfoSchemaDto dto) {
-        ResponseEntity<InfoSchemaDto> dtoResponse = restTemplate.postForEntity(url, dto, InfoSchemaDto.class);
-        return dtoResponse;
-    }
-
-    private static InfoSchemaDto buildInfoSchema(String schemaName) {
-        InfoSchemaDto dto = InfoSchemaDto.builder().name(schemaName).field(new SimpleField("flatNo", FieldType.NUMBER)).build();
-        return dto;
+        ResponseEntity<?> secondResponse =
+                schemaRestClient.updateTestSchema(infoSchemaDto);
+        assertEquals(HttpStatus.BAD_REQUEST,secondResponse.getStatusCode());
     }
 
     private String getDeleteSchemaUrl(InfoSchemaDto createdDto) {
         return String.format("http://localhost:%d/schema/delete/%s", port, createdDto.getName());
-    }
-
-    private String getUpdateSchemaUrl() {
-        return String.format("http://localhost:%d/schema/update", port);
-    }
-
-    private String getRetrieveSchemaUrl(InfoSchemaDto createdDto) {
-        return String.format("http://localhost:%d/schema/get/%s", port, createdDto.getName());
-    }
-
-    private String getCreateSchemaUrl() {
-        return String.format("http://localhost:%d/schema/create", port);
-    }
-
-    private String getUrlForFindAllSchema() {
-        return String.format("http://localhost:%d/schema", port);
     }
 
 

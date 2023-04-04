@@ -1,5 +1,6 @@
 package com.vvsoft.saathi.info.record;
 
+import com.vvsoft.saathi.info.record.exception.FieldNotFoundInSchemaException;
 import com.vvsoft.saathi.info.schema.model.InfoSchema;
 import com.vvsoft.saathi.info.schema.model.field.SimpleField;
 import lombok.Getter;
@@ -63,11 +64,18 @@ public class SimpleRecordValue implements RecordValue{
             fields.forEach(field -> values.put(field.getKey(),getDefaultValue(field)));
         }
 
-        public SimpleRecordValueBuilder addValue(String key, String value) throws NoSuchFieldException {
+        public SimpleRecordValueBuilder addValue(String key, String value){
             Optional<SimpleField> fieldFound = schema.getFieldByKey(key);
             if(fieldFound.isEmpty())
-                throw new NoSuchFieldException("Field not found:" + key);
+                throw new FieldNotFoundInSchemaException(key,schema.getName());
             values.put(key,fieldFound.get().getFieldType().convertToActualType(value));
+            return this;
+        }
+
+        public SimpleRecordValueBuilder addValues(Map<String,String> values){
+            for(Map.Entry<String,String> entry:values.entrySet()){
+                addValue(entry.getKey(),entry.getValue());
+            }
             return this;
         }
 

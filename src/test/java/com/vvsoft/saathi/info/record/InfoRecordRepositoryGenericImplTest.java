@@ -3,21 +3,16 @@ package com.vvsoft.saathi.info.record;
 import com.vvsoft.saathi.entity.dao.exception.EntityAlreadyExistsException;
 import com.vvsoft.saathi.entity.dao.exception.EntityNotFoundException;
 import com.vvsoft.saathi.info.schema.SchemaRepository;
-import com.vvsoft.saathi.info.schema.model.InfoSchema;
-import com.vvsoft.saathi.info.schema.model.field.FieldType;
-import com.vvsoft.saathi.info.schema.model.field.SimpleField;
 import com.vvsoft.saathi.test.util.StorageUtil;
+import com.vvsoft.saathi.test.util.TestSchemaProvider;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -34,12 +29,9 @@ class InfoRecordRepositoryGenericImplTest {
 
     @Value("${app.record.storage.path}")
     private String recordPath;
-    private SchemaProvider schemaProvider;
 
-    @BeforeAll
-    void init(){
-        this.schemaProvider = new SchemaProvider(schemaRepository);
-    }
+    @Autowired
+    private TestSchemaProvider schemaProvider;
 
     @AfterEach
     void cleanup() throws IOException {
@@ -122,18 +114,4 @@ class InfoRecordRepositoryGenericImplTest {
         assertThrows(EntityNotFoundException.class,() -> infoRecordRepository.delete(recordName));
     }
 
-    @Component
-    private static final class SchemaProvider {
-        private final InfoSchema infoSchema;
-
-        public SchemaProvider(SchemaRepository schemaRepository){
-            InfoSchema infoSchema = new InfoSchema("PersonalInfo",
-                        List.of(new SimpleField("Name", FieldType.TEXT),new SimpleField("Age",FieldType.NUMBER)));
-            this.infoSchema = schemaRepository.create(infoSchema);
-        }
-
-        public InfoSchema get(){
-            return infoSchema;
-        }
-    }
 }
