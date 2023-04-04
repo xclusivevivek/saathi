@@ -44,4 +44,18 @@ class InfoRecordServiceImplTest {
                 .values(Map.of("Age", "100")).build();
         assertThrows(EntityNotFoundException.class,() -> infoRecordService.create(dto));
     }
+
+    @Test
+    void canGetAllRecords(){
+        InfoSchema infoSchema = schemaProvider.get();
+        InfoRecordDto dto = InfoRecordDto.builder().schemaName(infoSchema.getName())
+                .name("TestInfoRecord2")
+                .values(Map.of("Age", "100")).build();
+        InfoRecord infoRecord = infoRecordService.create(dto);
+        Optional<Object> actualAge = infoRecord.getRecordValue().getValue("Age");
+        assertTrue(actualAge.isPresent());
+        assertEquals(100L, actualAge.get());
+        List<InfoRecord> records = infoRecordService.getAll();
+        assertTrue(records.stream().anyMatch( rec -> rec.getName().equals("TestInfoRecord2")));
+    }
 }

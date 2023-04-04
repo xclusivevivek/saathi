@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -39,5 +40,10 @@ public class InfoRecordRepositoryGenericImpl implements InfoRecordRepository{
     public void delete(String recordName) {
         dao.delete(recordName);
         log.info("Deleted InfoRecord : {}",recordName);
+    }
+
+    @Override
+    public List<InfoRecord> findAll() {
+        return dao.getAll();
     }
 }

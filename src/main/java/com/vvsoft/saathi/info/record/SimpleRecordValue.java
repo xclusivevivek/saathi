@@ -1,5 +1,7 @@
 package com.vvsoft.saathi.info.record;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vvsoft.saathi.info.record.exception.FieldNotFoundInSchemaException;
 import com.vvsoft.saathi.info.schema.model.InfoSchema;
 import com.vvsoft.saathi.info.schema.model.field.SimpleField;
@@ -15,7 +17,8 @@ public class SimpleRecordValue implements RecordValue{
     private final Map<String,Object> values = new HashMap<>();
     private final InfoSchema infoSchema;
 
-    private SimpleRecordValue(InfoSchema infoSchema) {
+    @JsonCreator()
+    private SimpleRecordValue(@JsonProperty("infoSchema") InfoSchema infoSchema) {
         this.infoSchema = infoSchema;
     }
 

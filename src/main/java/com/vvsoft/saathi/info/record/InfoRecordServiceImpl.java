@@ -8,6 +8,7 @@ import com.vvsoft.saathi.info.schema.model.InfoSchema;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -31,5 +32,10 @@ public class InfoRecordServiceImpl implements InfoRecordCrudService {
         SimpleRecordValue recordValue = SimpleRecordValue.builder(infoSchema.get()).addValues(dto.getValues()).build();
         InfoRecord infoRecord = new InfoRecord(dto.getName(), recordValue);
         return infoRecordRepository.create(infoRecord);
+    }
+
+    @Override
+    public List<InfoRecord> getAll() {
+        return infoRecordRepository.findAll();
     }
 }

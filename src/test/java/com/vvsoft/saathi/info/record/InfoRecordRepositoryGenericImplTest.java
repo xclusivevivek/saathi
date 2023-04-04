@@ -1,5 +1,6 @@
 package com.vvsoft.saathi.info.record;
 
+import com.vvsoft.saathi.entity.dao.GenericLocalStorageDao;
 import com.vvsoft.saathi.entity.dao.exception.EntityAlreadyExistsException;
 import com.vvsoft.saathi.entity.dao.exception.EntityNotFoundException;
 import com.vvsoft.saathi.info.schema.SchemaRepository;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -112,6 +114,33 @@ class InfoRecordRepositoryGenericImplTest {
     void cannotDeleteNonExistingInfoSchema(){
         String recordName = "EntityForUpdateWithoutCreate";
         assertThrows(EntityNotFoundException.class,() -> infoRecordRepository.delete(recordName));
+    }
+
+    @Test
+    void canGetAllInfoRecords(){
+        SimpleRecordValue recordValue = SimpleRecordValue.builder(schemaProvider.get()).addValue("Name","bar").addValue("Age","20").
+                build();
+        InfoRecord infoRecord = new InfoRecord("Foo2",recordValue);
+        InfoRecord resultRecord = infoRecordRepository.create(infoRecord);
+        RecordValue resultRecordValue = resultRecord.getRecordValue();
+        assertEquals("bar",resultRecordValue.getValue("Name").get());
+        List<InfoRecord> records = infoRecordRepository.findAll();
+        assertTrue(records.stream().anyMatch( rec -> rec.getName().equals("Foo2")));
+    }
+
+    @Test
+    void canLoadExistingInfoRecordOnStartup() throws IOException {
+        String recordName = "Foo3";
+        SimpleRecordValue recordValue = SimpleRecordValue.builder(schemaProvider.get()).addValue("Name","bar").addValue("Age","20").
+                build();
+        InfoRecord infoRecord = new InfoRecord(recordName,recordValue);
+        InfoRecord resultRecord = infoRecordRepository.create(infoRecord);
+        RecordValue resultRecordValue = resultRecord.getRecordValue();
+        assertEquals("bar",resultRecordValue.getValue("Name").get());
+        GenericLocalStorageDao<InfoRecord> dao = new GenericLocalStorageDao<InfoRecord>(recordPath, "record", true);
+        InfoRecordRepositoryGenericImpl repo = new InfoRecordRepositoryGenericImpl(dao);
+        Optional<InfoRecord> record = repo.find(recordName);
+        assertEquals(recordName,record.get().getName());
     }
 
 }
