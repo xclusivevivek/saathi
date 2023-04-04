@@ -57,8 +57,7 @@ class InfoRecordRepositoryGenericImplTest {
         InfoRecord infoRecord = new InfoRecord("BarDetails",recordValue);
         InfoRecord firstRecord = infoRecordRepository.create(infoRecord);
         InfoRecord duplicateRecord = new InfoRecord("BarDetails",SimpleRecordValue.builder(schemaProvider.get()).build());
-        assertThrows(EntityAlreadyExistsException.class,() -> {
-            infoRecordRepository.create(duplicateRecord);});
+        assertThrows(EntityAlreadyExistsException.class,() -> infoRecordRepository.create(duplicateRecord));
     }
 
     @Test
@@ -104,7 +103,7 @@ class InfoRecordRepositoryGenericImplTest {
                 build();
         String recordName = "EntityForDelete";
         InfoRecord infoRecord = new InfoRecord(recordName,recordValue);
-        InfoRecord result = infoRecordRepository.create(infoRecord);
+        infoRecordRepository.create(infoRecord);
         infoRecordRepository.delete(recordName);
         Optional<InfoRecord> record = infoRecordRepository.find(recordName);
         assertTrue(record.isEmpty());
@@ -137,7 +136,7 @@ class InfoRecordRepositoryGenericImplTest {
         InfoRecord resultRecord = infoRecordRepository.create(infoRecord);
         RecordValue resultRecordValue = resultRecord.getRecordValue();
         assertEquals("bar",resultRecordValue.getValue("Name").get());
-        GenericLocalStorageDao<InfoRecord> dao = new GenericLocalStorageDao<InfoRecord>(recordPath, "record", true);
+        GenericLocalStorageDao<InfoRecord> dao = new GenericLocalStorageDao<>(recordPath, "record", true);
         InfoRecordRepositoryGenericImpl repo = new InfoRecordRepositoryGenericImpl(dao);
         Optional<InfoRecord> record = repo.find(recordName);
         assertEquals(recordName,record.get().getName());

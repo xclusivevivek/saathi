@@ -9,6 +9,7 @@ import com.vvsoft.saathi.info.schema.model.Copyable;
 import com.vvsoft.saathi.test.util.StorageUtil;
 import lombok.Getter;
 import lombok.Setter;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,8 +25,12 @@ class GenericDaoTest {
 
     @BeforeEach
     public void setup() throws IOException {
-        StorageUtil.clearDirectory(STORAGE_PATH);
         genericDao = new GenericLocalStorageDao<>(STORAGE_PATH, "entity");
+    }
+
+    @AfterEach
+    public void cleanup() throws IOException {
+        StorageUtil.clearDirectory(STORAGE_PATH);
     }
 
     @Test
