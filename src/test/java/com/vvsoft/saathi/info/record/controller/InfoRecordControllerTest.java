@@ -33,34 +33,33 @@ class InfoRecordControllerTest {
     private String baseUrl;
     private SchemaRestTestClient schemaRestTestClient;
 
-    @Value("${app.record.storage.path}")
-    private String recordStoragePath;
-
-    @Value("${app.schema.storage.path}")
-    private String schemaStoragePath;
-
+    @Autowired
+    private StorageUtil storageUtil;
     private String createRecordUrl;
+    private String findRecordUrl;
+    private String updateRecordUrl;
+    private String deleteUrl;
 
     @BeforeAll
     void init(){
         baseUrl = String.format("http://localhost:%s/inforecord",port);
         schemaRestTestClient = new SchemaRestTestClient(restTemplate, port);
         createRecordUrl = baseUrl + "/create";
+        findRecordUrl = baseUrl + "/get?name={name}";
+        updateRecordUrl = baseUrl + "/update";
+        deleteUrl = baseUrl + "/delete?name={name}";
     }
 
     @AfterEach
     void cleanUpTest() throws IOException {
-        StorageUtil.clearDirectory(recordStoragePath);
-        StorageUtil.clearDirectory(schemaStoragePath);
+        storageUtil.clearSchemaStoragePath();
+        storageUtil.clearRecordStoragePath();
     }
 
     @Test
     void canCreateInfoRecord(){
         String schemaName = "FooSchema";
-        ResponseEntity<InfoSchemaDto> response = schemaRestTestClient.createTestSchema(schemaName);
-        assertEquals(HttpStatus.CREATED,response.getStatusCode());
-        ResponseEntity<InfoRecordDto> recordResponse = restTemplate.postForEntity(createRecordUrl,
-                InfoRecordDto.builder().schemaName(schemaName).name("BarRecord").values(Map.of("flatNo", "123")).build(), InfoRecordDto.class);
+        ResponseEntity<InfoRecordDto> recordResponse = makeCreateRequest(schemaName, "BarRecord");
         assertEquals(HttpStatus.CREATED,recordResponse.getStatusCode());
     }
 
@@ -101,6 +100,82 @@ class InfoRecordControllerTest {
         assertTrue(recordList.getBody().stream().anyMatch(rec -> rec.getSchema().getName().equals(schemaName)));
         assertTrue(recordList.getBody().stream().anyMatch(rec -> rec.getValues().containsKey("flatNo")));
         assertTrue(recordList.getBody().stream().anyMatch(rec -> rec.getValues().containsValue(123)));
+    }
+
+    @Test
+    void canGetExistingRecordByName(){
+        String schemaName = "findSchema";
+        String recordName = "findName";
+        ResponseEntity<InfoRecordDto> createResponse = makeCreateRequest(schemaName, recordName);
+        assertEquals(HttpStatus.CREATED, createResponse.getStatusCode());
+        ResponseEntity<InfoRecordDetailDto> findResponse = makeReadRequest(recordName);
+        assertEquals(HttpStatus.OK,findResponse.getStatusCode());
+        InfoRecordDetailDto infoRecordDto = findResponse.getBody();
+        assertEquals(Objects.requireNonNull(infoRecordDto).getName(), recordName);
+        assertEquals(Objects.requireNonNull(infoRecordDto).getSchema().getName(), schemaName);
+    }
+
+    @Test
+    void whenRecordIsMissing_getRequestReturnsEmpty(){
+        ResponseEntity<InfoRecordDetailDto> response = makeReadRequest("dummy");
+        assertEquals(HttpStatus.NO_CONTENT,response.getStatusCode());
+    }
+
+    @Test
+    void canUpdateRecord(){
+        String updateField = "flatNo";
+        ResponseEntity<InfoRecordDto> createResponse = makeCreateRequest("UpdateSchema", "UpdateRecord");
+        assertEquals(HttpStatus.CREATED,createResponse.getStatusCode());
+        InfoRecordDto originalRecord = createResponse.getBody();
+        Objects.requireNonNull(originalRecord).setValue(updateField,"346");
+        ResponseEntity<InfoRecordDetailDto> response = makeUpdateRequest(originalRecord);
+        assertEquals(HttpStatus.OK,response.getStatusCode());
+        InfoRecordDetailDto recordDetailDto = response.getBody();
+        Object value = Objects.requireNonNull(recordDetailDto).getValues().get(updateField);
+        assertEquals(346,value);
+    }
+
+    @Test
+    void whenRecordIsMissing_updateRequestReturnsBadRequest(){
+        ResponseEntity<InfoRecordDetailDto> response = makeUpdateRequest(InfoRecordDto.builder().name("dummy").build());
+        assertEquals(HttpStatus.BAD_REQUEST,response.getStatusCode());
+    }
+
+    @Test
+    void canDeleteRecord(){
+        String recordName = "DeleteRecord";
+        ResponseEntity<InfoRecordDto> createResponse = makeCreateRequest("DeleteSchema", recordName);
+        assertEquals(HttpStatus.CREATED,createResponse.getStatusCode());
+        ResponseEntity<Object> response = makeDeleteRequest(recordName);
+        assertEquals(HttpStatus.NO_CONTENT,response.getStatusCode());
+    }
+
+    @Test
+    void whenRecordIsMissing_deleteRequestReturnsBadRequest(){
+        ResponseEntity<Object> response = makeDeleteRequest("Dummy");
+        assertEquals(HttpStatus.BAD_REQUEST,response.getStatusCode());
+    }
+
+    private ResponseEntity<Object> makeDeleteRequest(String recordName) {
+        ResponseEntity<Object> response = restTemplate.exchange(deleteUrl, HttpMethod.DELETE, null, Object.class, recordName);
+        return response;
+    }
+
+    private ResponseEntity<InfoRecordDetailDto> makeUpdateRequest(InfoRecordDto recordToUpdate) {
+        ResponseEntity<InfoRecordDetailDto> response = restTemplate.postForEntity(updateRecordUrl, recordToUpdate, InfoRecordDetailDto.class);
+        return response;
+    }
+
+    private ResponseEntity<InfoRecordDto> makeCreateRequest(String schemaName, String recordName) {
+        ResponseEntity<InfoSchemaDto> response = schemaRestTestClient.createTestSchema(schemaName);
+        assertEquals(HttpStatus.CREATED,response.getStatusCode());
+        return restTemplate.postForEntity(createRecordUrl,
+                InfoRecordDto.builder().schemaName(schemaName).name(recordName).values(Map.of("flatNo", "123")).build(), InfoRecordDto.class);
+    }
+
+    private ResponseEntity<InfoRecordDetailDto> makeReadRequest(String recordName) {
+        ResponseEntity<InfoRecordDetailDto> findResponse = restTemplate.getForEntity(findRecordUrl, InfoRecordDetailDto.class, Map.of("name", recordName));
+        return findResponse;
     }
 
 }

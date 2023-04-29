@@ -29,15 +29,15 @@ class InfoRecordRepositoryGenericImplTest {
     @Autowired
     private SchemaRepository schemaRepository;
 
-    @Value("${app.record.storage.path}")
-    private String recordPath;
-
     @Autowired
     private TestSchemaProvider schemaProvider;
 
+    @Autowired
+    private StorageUtil storageUtil;
+
     @AfterEach
     void cleanup() throws IOException {
-        StorageUtil.clearDirectory(recordPath);
+        storageUtil.clearRecordStoragePath();
     }
 
     @Test
@@ -136,7 +136,7 @@ class InfoRecordRepositoryGenericImplTest {
         InfoRecord resultRecord = infoRecordRepository.create(infoRecord);
         RecordValue resultRecordValue = resultRecord.getRecordValue();
         assertEquals("bar",resultRecordValue.getValue("Name").get());
-        GenericLocalStorageDao<InfoRecord> dao = new GenericLocalStorageDao<>(recordPath, "record", true);
+        GenericLocalStorageDao<InfoRecord> dao = new GenericLocalStorageDao<>(storageUtil.getRecordStoragePath(), "record", true);
         InfoRecordRepositoryGenericImpl repo = new InfoRecordRepositoryGenericImpl(dao);
         Optional<InfoRecord> record = repo.find(recordName);
         assertEquals(recordName,record.get().getName());

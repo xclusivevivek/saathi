@@ -10,7 +10,11 @@ import java.util.Map;
 @Builder
 @ToString
 public class InfoRecordDto {
-    String name;
-    String schemaName;
-    Map<String,String> values;
+    private String name;
+    private String schemaName;
+    private Map<String,String> values;
+
+    public void setValue(String field,String value){
+        values.put(field,value);
+    }
 }

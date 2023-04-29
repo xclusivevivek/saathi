@@ -27,7 +27,7 @@ public class SchemaRestTestClient {
     }
 
     public ResponseEntity<InfoSchemaDto> getSchema(String name) {
-        return makeGetRequest(getRetrieveSchemaUrl(name));
+        return makeGetRequest(getRetrieveSchemaUrl(),name);
     }
 
     public List<InfoSchemaDto> getAll() {
@@ -50,12 +50,12 @@ public class SchemaRestTestClient {
         return String.format("http://localhost:%d/schema/update", port);
     }
 
-    private String getRetrieveSchemaUrl(String name) {
-        return String.format("http://localhost:%d/schema/get/%s", port, name);
+    private String getRetrieveSchemaUrl() {
+        return String.format("http://localhost:%d/schema/get?name={name}", port);
     }
 
-    private ResponseEntity<InfoSchemaDto> makeGetRequest(String url) {
-        return restTemplate.getForEntity(url, InfoSchemaDto.class);
+    private ResponseEntity<InfoSchemaDto> makeGetRequest(String url,String name) {
+        return restTemplate.getForEntity(url, InfoSchemaDto.class,name);
     }
 
     private String getUrlForFindAllSchema() {

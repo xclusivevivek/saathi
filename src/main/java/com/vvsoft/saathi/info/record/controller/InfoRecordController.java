@@ -7,9 +7,11 @@ import com.vvsoft.saathi.info.record.service.InfoRecordCrudService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -37,6 +39,27 @@ public class InfoRecordController {
         log.info("Processing InfoRecord creation request:{}",dto);
         infoRecordCrudService.create(dto);
         return dto;
+    }
+
+    @GetMapping(path = "get")
+    public ResponseEntity<InfoRecordDetailDto> getInfoRecord(@RequestParam("name") String recordName){
+        Optional<InfoRecord> maybeInfoRecord = infoRecordCrudService.read(recordName);
+        return maybeInfoRecord.map(infoRecord -> ResponseEntity.ok(InfoRecordDetailDto.from(infoRecord))).orElseGet(() -> ResponseEntity.noContent().build());
+    }
+
+    @PostMapping(path = "update")
+    @ResponseStatus(HttpStatus.OK)
+    public InfoRecordDetailDto updateInfoRecord(@RequestBody InfoRecordDto dto){
+        log.info("Processing InfoRecord update request:{}",dto);
+        InfoRecord updatedRecord = infoRecordCrudService.update(dto);
+        return InfoRecordDetailDto.from(updatedRecord);
+    }
+
+    @DeleteMapping(path = "delete")
+    public ResponseEntity<Object> deleteInfoRecord(@RequestParam("name") String recordName){
+        log.info("Processing InfoRecord delete request:{}",recordName);
+        infoRecordCrudService.delete(recordName);
+        return ResponseEntity.noContent().build();
     }
 
 }

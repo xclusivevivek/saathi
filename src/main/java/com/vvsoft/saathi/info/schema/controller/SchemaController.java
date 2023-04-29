@@ -26,8 +26,8 @@ public class SchemaController {
         return schemaRepository.findAll().stream().map(InfoSchemaDto::fromSchema).collect(Collectors.toList());
     }
 
-    @GetMapping(path = "/get/{name}")
-    public @ResponseBody ResponseEntity<InfoSchema> getSchema(@PathVariable("name") String name){
+    @GetMapping(path = "/get")
+    public @ResponseBody ResponseEntity<InfoSchema> getSchema(@RequestParam("name") String name){
         Optional<InfoSchema> infoSchema = schemaRepository.find(name);
         return infoSchema.map(schema -> new ResponseEntity<>(schema, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));

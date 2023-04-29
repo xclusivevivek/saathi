@@ -33,8 +33,8 @@ class SchemaControllerIntegrationTest {
     @Value("${local.server.port}")
     private int port;
 
-    @Value("${app.schema.storage.path}")
-    private String storagePath;
+    @Autowired
+    private StorageUtil storageUtil;
 
     private SchemaRestTestClient schemaRestClient;
 
@@ -45,7 +45,7 @@ class SchemaControllerIntegrationTest {
 
     @AfterEach
     void cleanUpTest() throws IOException {
-        StorageUtil.clearDirectory(storagePath);
+        storageUtil.clearSchemaStoragePath();
     }
     @Test
     void testSchemaLifecycle(){
