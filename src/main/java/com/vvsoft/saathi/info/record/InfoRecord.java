@@ -26,7 +26,7 @@ public class InfoRecord extends NamedEntity implements Copyable<InfoRecord> {
     }
 
     public void updateValues(Map<String, String> values) {
-        values.entrySet().stream().forEach( entry -> {
+        values.entrySet().forEach(entry -> {
             try {
                 recordValue.update(entry.getKey(), entry.getValue());
             } catch (NoSuchFieldException e) {

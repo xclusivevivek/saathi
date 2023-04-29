@@ -81,7 +81,7 @@ class InfoRecordServiceImplTest {
     }
 
     @Test
-    void canUpdateExistingRecord() throws NoSuchFieldException {
+    void canUpdateExistingRecord() {
         String recordName = "RecordForUpdate";
         InfoRecord infoRecord = infoRecordService.create(createTestRecordDto(recordName, "20"));
         InfoRecordDto updatedDto = InfoRecordDto.builder().name(infoRecord.getName())
@@ -121,9 +121,8 @@ class InfoRecordServiceImplTest {
 
     private InfoRecordDto createTestRecordDto(String recordName, String ageValue) {
         InfoSchema infoSchema = schemaProvider.get();
-        InfoRecordDto dto = InfoRecordDto.builder().schemaName(infoSchema.getName())
+        return InfoRecordDto.builder().schemaName(infoSchema.getName())
                 .name(recordName)
                 .values(Map.of("Age", ageValue)).build();
-        return dto;
     }
 }
