@@ -34,3 +34,6 @@ build/
 
 ### Log Folder ##
 logs/
+
+### Data Folder
+data/
