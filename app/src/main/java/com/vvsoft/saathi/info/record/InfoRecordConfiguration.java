@@ -1,7 +1,7 @@
 package com.vvsoft.saathi.info.record;
 
 import com.vvsoft.saathi.entity.dao.GenericDao;
-import com.vvsoft.saathi.entity.dao.GenericLocalStorageDao;
+import com.vvsoft.saathi.info.GenericLocalStorageDao;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

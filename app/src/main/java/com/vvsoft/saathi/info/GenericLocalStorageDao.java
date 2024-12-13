@@ -1,8 +1,10 @@
-package com.vvsoft.saathi.entity.dao;
+package com.vvsoft.saathi.info;
+
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vvsoft.saathi.entity.NamedEntity;
+import com.vvsoft.saathi.entity.dao.GenericDao;
 import com.vvsoft.saathi.entity.dao.exception.InvalidEntityFile;
 import com.vvsoft.saathi.entity.dao.exception.EntityAlreadyExistsException;
 import com.vvsoft.saathi.entity.dao.exception.EntityNotFoundException;
@@ -19,7 +21,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class GenericLocalStorageDao<T extends NamedEntity & Copyable<T>> implements GenericDao<T>{
+public class GenericLocalStorageDao<T extends NamedEntity & Copyable<T>> implements GenericDao<T> {
     public final String entityName;
     private final Path storagePath;
     private final ObjectMapper jsonMapper;
