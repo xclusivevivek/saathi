@@ -15,7 +15,7 @@
     <name>Saathi</name>
 	<description>Companion</description>
     <modules>
-        <module>entity</module>
+        <module>info-record-core</module>
 		<module>app</module>
 	</modules>
     <properties>
