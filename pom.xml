@@ -11,23 +11,19 @@
 	<groupId>com.vvsoft</groupId>
 	<artifactId>Saathi</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>Saathi</name>
+    <packaging>pom</packaging>
+    <name>Saathi</name>
 	<description>Companion</description>
-	<properties>
-		<java.version>11</java.version>
+    <modules>
+        <module>entity</module>
+		<module>app</module>
+	</modules>
+    <properties>
+		<java.version>17</java.version>
 		<jackson.version>2.13.2</jackson.version>
 	</properties>
 	<dependencies>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-			<exclusions>
-				<exclusion>
-					<groupId>org.springframework.boot</groupId>
-					<artifactId>spring-boot-starter-logging</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
+
 
 		<dependency>
 			<groupId>org.projectlombok</groupId>
@@ -44,18 +40,6 @@
 			<version>${jackson.version}</version>
 		</dependency>
 
-		<!--	Test Dependencies-->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-			<exclusions>
-				<exclusion>
-					<groupId>junit</groupId>
-					<artifactId>junit</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-engine</artifactId>
@@ -70,21 +54,6 @@
 		</dependency>
 	</dependencies>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<excludes>
-						<exclude>
-							<groupId>org.projectlombok</groupId>
-							<artifactId>lombok</artifactId>
-						</exclude>
-					</excludes>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
+
 
 </project>
