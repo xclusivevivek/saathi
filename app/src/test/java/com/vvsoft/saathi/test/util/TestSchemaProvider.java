@@ -1,6 +1,6 @@
 package com.vvsoft.saathi.test.util;
 
-import com.vvsoft.saathi.info.schema.SchemaRepository;
+import com.vvsoft.saathi.info.schema.crud.SchemaRepository;
 import com.vvsoft.saathi.info.schema.model.InfoSchema;
 import com.vvsoft.saathi.info.schema.model.field.FieldType;
 import com.vvsoft.saathi.info.schema.model.field.SimpleField;

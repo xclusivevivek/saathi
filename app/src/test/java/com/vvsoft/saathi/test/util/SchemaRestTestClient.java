@@ -1,6 +1,6 @@
 package com.vvsoft.saathi.test.util;
 
-import com.vvsoft.saathi.info.schema.dto.InfoSchemaDto;
+import com.vvsoft.saathi.info.schema.presentation.InfoSchemaDto;
 import com.vvsoft.saathi.info.schema.model.field.FieldType;
 import com.vvsoft.saathi.info.schema.model.field.SimpleField;
 import org.springframework.boot.test.web.client.TestRestTemplate;

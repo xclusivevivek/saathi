@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vvsoft.saathi.entity.NamedEntity;
 import com.vvsoft.saathi.entity.dao.exception.EntityAlreadyExistsException;
 import com.vvsoft.saathi.entity.dao.exception.EntityNotFoundException;
-import com.vvsoft.saathi.info.GenericLocalStorageDao;
+import com.vvsoft.saathi.info.persistance.GenericLocalStorageDao;
 import com.vvsoft.saathi.info.schema.model.Copyable;
 import com.vvsoft.saathi.test.util.StorageUtil;
 import lombok.Getter;

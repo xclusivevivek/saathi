@@ -1,9 +1,9 @@
 package com.vvsoft.saathi.info.record.controller;
 
 import com.vvsoft.saathi.error.rest.ApiError;
-import com.vvsoft.saathi.info.record.dto.InfoRecordDetailDto;
-import com.vvsoft.saathi.info.record.dto.InfoRecordDto;
-import com.vvsoft.saathi.info.schema.dto.InfoSchemaDto;
+import com.vvsoft.saathi.info.record.presentation.InfoRecordDetailDto;
+import com.vvsoft.saathi.info.record.presentation.InfoRecordDto;
+import com.vvsoft.saathi.info.schema.presentation.InfoSchemaDto;
 import com.vvsoft.saathi.test.util.SchemaRestTestClient;
 import com.vvsoft.saathi.test.util.StorageUtil;
 import org.junit.jupiter.api.*;

@@ -1,6 +1,6 @@
 package com.vvsoft.saathi.info.schema.controller;
 
-import com.vvsoft.saathi.info.schema.dto.InfoSchemaDto;
+import com.vvsoft.saathi.info.schema.presentation.InfoSchemaDto;
 import com.vvsoft.saathi.info.schema.model.field.FieldType;
 import com.vvsoft.saathi.info.schema.model.field.SimpleField;
 import com.vvsoft.saathi.test.util.SchemaRestTestClient;
