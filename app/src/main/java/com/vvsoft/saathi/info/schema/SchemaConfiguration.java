@@ -17,8 +17,14 @@ public class SchemaConfiguration {
 
     @Value("${app.schema.loadOnStartup}")
     private boolean loadOnStartup;
+
     @Bean
     public GenericDao<InfoSchema> getInfoSchemaDao() throws IOException {
         return new GenericLocalStorageDao<>(schemaStoragePath,"schema",loadOnStartup);
+    }
+
+    @Bean
+    public SchemaRepository getInfoSchemaRepo(GenericDao<InfoSchema> dao) throws IOException {
+        return new SchemaRepositoryImpl(dao);
     }
 }

@@ -2,18 +2,14 @@ package com.vvsoft.saathi.info.record;
 
 import com.vvsoft.saathi.entity.dao.GenericDao;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Slf4j
-@Service
 public class InfoRecordRepositoryGenericImpl implements InfoRecordRepository{
     private final GenericDao<InfoRecord> dao;
 
-    @Autowired
     public InfoRecordRepositoryGenericImpl(GenericDao<InfoRecord> dao){
         this.dao = dao;
     }

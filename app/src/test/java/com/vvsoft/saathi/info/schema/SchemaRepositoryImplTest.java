@@ -18,14 +18,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-class SchemaServiceImplTest {
+class SchemaRepositoryImplTest {
     private final String path = "data/test/" + this.getClass().getName();
 
     private SchemaRepository schemaRepository;
 
     @BeforeEach
     void setupTest() throws IOException {
-        schemaRepository = new SchemaServiceImpl(new GenericLocalStorageDao<>(path,"schema"));
+        schemaRepository = new SchemaRepositoryImpl(new GenericLocalStorageDao<>(path,"schema"));
     }
 
     @AfterEach

@@ -3,18 +3,14 @@ package com.vvsoft.saathi.info.schema;
 import com.vvsoft.saathi.entity.dao.GenericDao;
 import com.vvsoft.saathi.info.schema.model.InfoSchema;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
 
-@Component
 @Slf4j
-public class SchemaServiceImpl implements SchemaRepository {
+public class SchemaRepositoryImpl implements SchemaRepository {
     private final GenericDao<InfoSchema> dao;
-    @Autowired
-    public SchemaServiceImpl(GenericDao<InfoSchema> dao) {
+    public SchemaRepositoryImpl(GenericDao<InfoSchema> dao) {
         this.dao = dao;
     }
 

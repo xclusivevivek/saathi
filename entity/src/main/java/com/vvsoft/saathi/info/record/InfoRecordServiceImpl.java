@@ -6,20 +6,16 @@ import com.vvsoft.saathi.info.record.service.InfoRecordCrudService;
 import com.vvsoft.saathi.info.schema.SchemaRepository;
 import com.vvsoft.saathi.info.schema.model.InfoSchema;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
 
-@Component
 @Slf4j
 public class InfoRecordServiceImpl implements InfoRecordCrudService {
 
     private final InfoRecordRepository infoRecordRepository;
     private final SchemaRepository schemaRepository;
 
-    @Autowired
     public InfoRecordServiceImpl(InfoRecordRepository infoRecordRepository, SchemaRepository schemaRepository) {
         this.infoRecordRepository = infoRecordRepository;
         this.schemaRepository = schemaRepository;
