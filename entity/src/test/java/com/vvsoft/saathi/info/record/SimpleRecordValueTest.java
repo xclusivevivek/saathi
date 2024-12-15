@@ -1,6 +1,7 @@
 package com.vvsoft.saathi.info.record;
 
-import com.vvsoft.saathi.info.record.exception.FieldNotFoundInSchemaException;
+import com.vvsoft.saathi.info.record.model.exception.FieldNotFoundInSchemaException;
+import com.vvsoft.saathi.info.record.model.SimpleRecordValue;
 import com.vvsoft.saathi.info.schema.model.InfoSchema;
 import com.vvsoft.saathi.info.schema.model.field.FieldType;
 import com.vvsoft.saathi.info.schema.model.field.SimpleField;

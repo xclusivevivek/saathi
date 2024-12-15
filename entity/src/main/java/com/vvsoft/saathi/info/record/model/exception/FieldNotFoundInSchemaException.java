@@ -1,4 +1,4 @@
-package com.vvsoft.saathi.info.record.exception;
+package com.vvsoft.saathi.info.record.model.exception;
 
 import lombok.Getter;
 

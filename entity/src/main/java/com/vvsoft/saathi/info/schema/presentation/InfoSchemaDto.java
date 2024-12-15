@@ -1,4 +1,4 @@
-package com.vvsoft.saathi.info.schema.dto;
+package com.vvsoft.saathi.info.schema.presentation;
 
 import com.vvsoft.saathi.info.schema.model.InfoSchema;
 import com.vvsoft.saathi.info.schema.model.field.SimpleField;

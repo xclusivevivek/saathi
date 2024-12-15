@@ -2,8 +2,10 @@ package com.vvsoft.saathi.info.schema;
 
 import com.vvsoft.saathi.entity.dao.exception.EntityAlreadyExistsException;
 import com.vvsoft.saathi.entity.dao.exception.EntityNotFoundException;
-import com.vvsoft.saathi.info.GenericLocalStorageDao;
-import com.vvsoft.saathi.info.schema.dto.InfoSchemaDto;
+import com.vvsoft.saathi.info.persistance.GenericLocalStorageDao;
+import com.vvsoft.saathi.info.schema.crud.SchemaRepository;
+import com.vvsoft.saathi.info.schema.crud.SchemaRepositoryImpl;
+import com.vvsoft.saathi.info.schema.presentation.InfoSchemaDto;
 import com.vvsoft.saathi.info.schema.model.InfoSchema;
 import com.vvsoft.saathi.info.schema.model.field.FieldType;
 import com.vvsoft.saathi.info.schema.model.field.SimpleField;

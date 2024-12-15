@@ -1,4 +1,4 @@
-package com.vvsoft.saathi.info.schema;
+package com.vvsoft.saathi.info.schema.crud;
 
 import com.vvsoft.saathi.entity.dao.GenericDao;
 import com.vvsoft.saathi.info.schema.model.InfoSchema;

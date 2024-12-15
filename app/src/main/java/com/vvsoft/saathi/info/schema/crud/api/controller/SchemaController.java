@@ -1,7 +1,7 @@
-package com.vvsoft.saathi.info.schema.controller;
+package com.vvsoft.saathi.info.schema.crud.api.controller;
 
-import com.vvsoft.saathi.info.schema.SchemaRepository;
-import com.vvsoft.saathi.info.schema.dto.InfoSchemaDto;
+import com.vvsoft.saathi.info.schema.crud.SchemaRepository;
+import com.vvsoft.saathi.info.schema.presentation.InfoSchemaDto;
 import com.vvsoft.saathi.info.schema.model.InfoSchema;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

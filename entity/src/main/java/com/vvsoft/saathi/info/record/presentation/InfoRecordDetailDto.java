@@ -1,7 +1,7 @@
-package com.vvsoft.saathi.info.record.dto;
+package com.vvsoft.saathi.info.record.presentation;
 
-import com.vvsoft.saathi.info.record.InfoRecord;
-import com.vvsoft.saathi.info.schema.dto.InfoSchemaDto;
+import com.vvsoft.saathi.info.record.model.InfoRecord;
+import com.vvsoft.saathi.info.schema.presentation.InfoSchemaDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;

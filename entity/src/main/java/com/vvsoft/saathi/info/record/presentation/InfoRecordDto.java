@@ -1,4 +1,4 @@
-package com.vvsoft.saathi.info.record.dto;
+package com.vvsoft.saathi.info.record.presentation;
 
 import lombok.Builder;
 import lombok.Data;

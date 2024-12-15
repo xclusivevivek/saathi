@@ -1,4 +1,6 @@
-package com.vvsoft.saathi.info.record;
+package com.vvsoft.saathi.info.record.crud;
+
+import com.vvsoft.saathi.info.record.model.InfoRecord;
 
 import java.util.List;
 import java.util.Optional;

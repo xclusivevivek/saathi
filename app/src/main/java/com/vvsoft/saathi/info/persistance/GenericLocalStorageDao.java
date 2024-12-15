@@ -1,4 +1,4 @@
-package com.vvsoft.saathi.info;
+package com.vvsoft.saathi.info.persistance;
 
 
 import com.fasterxml.jackson.core.type.TypeReference;

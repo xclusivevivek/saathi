@@ -2,8 +2,13 @@ package com.vvsoft.saathi.info.record;
 
 import com.vvsoft.saathi.entity.dao.exception.EntityAlreadyExistsException;
 import com.vvsoft.saathi.entity.dao.exception.EntityNotFoundException;
-import com.vvsoft.saathi.info.GenericLocalStorageDao;
-import com.vvsoft.saathi.info.schema.SchemaRepository;
+import com.vvsoft.saathi.info.persistance.GenericLocalStorageDao;
+import com.vvsoft.saathi.info.record.model.InfoRecord;
+import com.vvsoft.saathi.info.record.model.RecordValue;
+import com.vvsoft.saathi.info.record.model.SimpleRecordValue;
+import com.vvsoft.saathi.info.record.crud.InfoRecordRepository;
+import com.vvsoft.saathi.info.record.crud.InfoRecordRepositoryGenericImpl;
+import com.vvsoft.saathi.info.schema.crud.SchemaRepository;
 import com.vvsoft.saathi.test.util.StorageUtil;
 import com.vvsoft.saathi.test.util.TestSchemaProvider;
 import org.junit.jupiter.api.AfterEach;

@@ -1,9 +1,9 @@
-package com.vvsoft.saathi.info.record.controller;
+package com.vvsoft.saathi.info.record.crud.api.controller;
 
-import com.vvsoft.saathi.info.record.InfoRecord;
-import com.vvsoft.saathi.info.record.dto.InfoRecordDetailDto;
-import com.vvsoft.saathi.info.record.dto.InfoRecordDto;
-import com.vvsoft.saathi.info.record.service.InfoRecordCrudService;
+import com.vvsoft.saathi.info.record.model.InfoRecord;
+import com.vvsoft.saathi.info.record.presentation.InfoRecordDetailDto;
+import com.vvsoft.saathi.info.record.presentation.InfoRecordDto;
+import com.vvsoft.saathi.info.record.crud.InfoRecordCrudService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

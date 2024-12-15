@@ -1,7 +1,7 @@
-package com.vvsoft.saathi.info.record.service;
+package com.vvsoft.saathi.info.record.crud;
 
-import com.vvsoft.saathi.info.record.InfoRecord;
-import com.vvsoft.saathi.info.record.dto.InfoRecordDto;
+import com.vvsoft.saathi.info.record.model.InfoRecord;
+import com.vvsoft.saathi.info.record.presentation.InfoRecordDto;
 
 import java.util.List;
 import java.util.Optional;

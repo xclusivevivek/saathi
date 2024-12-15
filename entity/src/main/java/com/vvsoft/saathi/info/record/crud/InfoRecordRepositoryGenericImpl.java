@@ -1,6 +1,7 @@
-package com.vvsoft.saathi.info.record;
+package com.vvsoft.saathi.info.record.crud;
 
 import com.vvsoft.saathi.entity.dao.GenericDao;
+import com.vvsoft.saathi.info.record.model.InfoRecord;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;

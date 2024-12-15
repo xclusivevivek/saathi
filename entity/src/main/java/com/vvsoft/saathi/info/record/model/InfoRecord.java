@@ -1,4 +1,4 @@
-package com.vvsoft.saathi.info.record;
+package com.vvsoft.saathi.info.record.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;

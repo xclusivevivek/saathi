@@ -1,9 +1,10 @@
-package com.vvsoft.saathi.info.record;
+package com.vvsoft.saathi.info.record.crud;
 
 import com.vvsoft.saathi.entity.dao.exception.EntityNotFoundException;
-import com.vvsoft.saathi.info.record.dto.InfoRecordDto;
-import com.vvsoft.saathi.info.record.service.InfoRecordCrudService;
-import com.vvsoft.saathi.info.schema.SchemaRepository;
+import com.vvsoft.saathi.info.record.presentation.InfoRecordDto;
+import com.vvsoft.saathi.info.record.model.InfoRecord;
+import com.vvsoft.saathi.info.record.model.SimpleRecordValue;
+import com.vvsoft.saathi.info.schema.crud.SchemaRepository;
 import com.vvsoft.saathi.info.schema.model.InfoSchema;
 import lombok.extern.slf4j.Slf4j;
 

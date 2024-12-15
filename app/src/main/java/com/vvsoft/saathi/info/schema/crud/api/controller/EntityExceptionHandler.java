@@ -1,4 +1,4 @@
-package com.vvsoft.saathi.info.schema.controller;
+package com.vvsoft.saathi.info.schema.crud.api.controller;
 
 import com.vvsoft.saathi.entity.dao.exception.EntityAlreadyExistsException;
 import com.vvsoft.saathi.entity.dao.exception.EntityNotFoundException;

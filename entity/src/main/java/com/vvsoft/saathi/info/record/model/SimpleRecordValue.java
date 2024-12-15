@@ -1,8 +1,8 @@
-package com.vvsoft.saathi.info.record;
+package com.vvsoft.saathi.info.record.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vvsoft.saathi.info.record.exception.FieldNotFoundInSchemaException;
+import com.vvsoft.saathi.info.record.model.exception.FieldNotFoundInSchemaException;
 import com.vvsoft.saathi.info.schema.model.InfoSchema;
 import com.vvsoft.saathi.info.schema.model.field.SimpleField;
 import lombok.Getter;
@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @Getter
-public class SimpleRecordValue implements RecordValue{
+public class SimpleRecordValue implements RecordValue {
     private final Map<String,Object> values = new HashMap<>();
     private final InfoSchema infoSchema;
 
