@@ -1,5 +1,6 @@
 package com.vvsoft.saathi.info.record.controller;
 
+import com.vvsoft.saathi.MockConfiguration;
 import com.vvsoft.saathi.error.rest.ApiError;
 import com.vvsoft.saathi.info.record.presentation.InfoRecordDetailDto;
 import com.vvsoft.saathi.info.record.presentation.InfoRecordDto;
@@ -23,7 +24,7 @@ import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,classes = {MockConfiguration.class})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class InfoRecordControllerTest {
     @Autowired

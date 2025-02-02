@@ -1,8 +1,9 @@
 package com.vvsoft.saathi.info.schema.controller;
 
-import com.vvsoft.saathi.info.schema.presentation.InfoSchemaDto;
+import com.vvsoft.saathi.MockConfiguration;
 import com.vvsoft.saathi.info.schema.model.field.FieldType;
 import com.vvsoft.saathi.info.schema.model.field.SimpleField;
+import com.vvsoft.saathi.info.schema.presentation.InfoSchemaDto;
 import com.vvsoft.saathi.test.util.SchemaRestTestClient;
 import com.vvsoft.saathi.test.util.StorageUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +25,7 @@ import java.util.Objects;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,classes = {MockConfiguration.class})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Slf4j
 class SchemaControllerIntegrationTest {
