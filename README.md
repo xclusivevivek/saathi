@@ -74,4 +74,9 @@
 
 
 
-
+### Run configuration
+#### Setup environment variables as follow
+##### `KEYSTORE_PATH` : Path to the servers keystore file (pkcs12) 
+##### `KEYSTORE_PASSWORD` : Keystore's password
+##### `APP_ADMIN_USER` : APP Admin User
+##### `APP_ADMIN_USER` : App Admin User's password
