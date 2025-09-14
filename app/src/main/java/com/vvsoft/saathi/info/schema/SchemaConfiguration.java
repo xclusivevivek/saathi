@@ -4,7 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vvsoft.saathi.entity.dao.GenericDao;
 import com.vvsoft.saathi.entity.persistance.EntityPersistor;
 import com.vvsoft.saathi.entity.persistance.GenericPersistenceDao;
-import com.vvsoft.saathi.info.persistance.LocalStorageEntityPersistor;
+import com.vvsoft.saathi.entity.persistance.LocalDiskStorageFileSystem;
+import com.vvsoft.saathi.info.persistance.FileBasedEntityPersistor;
 import com.vvsoft.saathi.info.schema.crud.SchemaRepository;
 import com.vvsoft.saathi.info.schema.crud.SchemaRepositoryImpl;
 import com.vvsoft.saathi.info.schema.model.InfoSchema;
@@ -35,6 +36,6 @@ public class SchemaConfiguration {
 
     @Bean
     public EntityPersistor<InfoSchema> getEntityPersistor(){
-        return new LocalStorageEntityPersistor<>(schemaStoragePath,new ObjectMapper(),"schema");
+        return new FileBasedEntityPersistor<>(schemaStoragePath,new ObjectMapper(),"schema",new LocalDiskStorageFileSystem());
     }
 }

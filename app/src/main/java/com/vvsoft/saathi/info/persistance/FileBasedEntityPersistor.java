@@ -6,32 +6,37 @@ import com.vvsoft.saathi.entity.NamedEntity;
 import com.vvsoft.saathi.entity.dao.exception.InvalidEntityFile;
 import com.vvsoft.saathi.entity.dao.exception.StoragePathInvalidException;
 import com.vvsoft.saathi.entity.persistance.EntityPersistor;
+import com.vvsoft.saathi.entity.persistance.StorageFileSystem;
 import com.vvsoft.saathi.info.schema.model.Copyable;
 
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
 import java.util.Collection;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class LocalStorageEntityPersistor<T extends NamedEntity & Copyable<T>> implements EntityPersistor<T> {
+public class FileBasedEntityPersistor<T extends NamedEntity & Copyable<T>> implements EntityPersistor<T> {
     private final Path storagePath;
     private final ObjectMapper jsonMapper;
     private final String entityName;
+    private final StorageFileSystem storageFileSystem;
 
-    public LocalStorageEntityPersistor(String storagePath, ObjectMapper jsonMapper, String entityName) {
+    public FileBasedEntityPersistor(String storagePath,
+                                    ObjectMapper jsonMapper,
+                                    String entityName,
+                                    StorageFileSystem storageFileSystem
+                                    ) {
         this.storagePath = Path.of(storagePath);
         this.jsonMapper = jsonMapper;
         this.entityName = entityName;
+        this.storageFileSystem = storageFileSystem;
     }
 
     @Override
-    public void initialize() {
-        if(!Files.exists(this.storagePath)) {
+    public void initialize() throws IOException {
+        if(!storageFileSystem.doesFolderExists(this.storagePath)) {
             try {
-                Files.createDirectories(this.storagePath);
+                storageFileSystem.createFolders(this.storagePath);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -40,7 +45,7 @@ public class LocalStorageEntityPersistor<T extends NamedEntity & Copyable<T>> im
 
     @Override
     public Collection<T> getAll() {
-        try(Stream<Path> files = Files.walk(storagePath,2)){
+        try(Stream<Path> files = storageFileSystem.walk(storagePath)){
             return files.filter(file -> file.toAbsolutePath().toString().endsWith("." + entityName))
                     .map(file -> {
                         try {
@@ -50,7 +55,7 @@ public class LocalStorageEntityPersistor<T extends NamedEntity & Copyable<T>> im
                         }
                     }).collect(Collectors.toList());
         } catch (IOException e) {
-            throw new StoragePathInvalidException("Error while loading cache",e);
+            throw new RuntimeException(e);
         }
     }
 
@@ -59,8 +64,7 @@ public class LocalStorageEntityPersistor<T extends NamedEntity & Copyable<T>> im
         try {
             byte[] serializedEntity;
             serializedEntity = jsonMapper.writeValueAsBytes(newEntity);
-            Path createdFile = Files.createFile(getEntityFilePath(newEntity.getId()));
-            Files.write(createdFile,serializedEntity, StandardOpenOption.CREATE);
+            storageFileSystem.createFile(getEntityFilePath(newEntity.getId()), serializedEntity);
         } catch (IOException e) {
             throw new StoragePathInvalidException("Error while creating file",e);
         }
@@ -70,7 +74,8 @@ public class LocalStorageEntityPersistor<T extends NamedEntity & Copyable<T>> im
     public void updateEntity(T newEntity) {
         Path entityFilePath = getEntityFilePath(newEntity.getId());
         try {
-            jsonMapper.writeValue(entityFilePath.toFile(), newEntity);
+            byte[] serializedEntity = jsonMapper.writeValueAsBytes(newEntity);
+            storageFileSystem.overwriteFile(entityFilePath, serializedEntity);
         } catch (IOException e) {
             throw new StoragePathInvalidException("Error in updating file " + entityFilePath.getFileName());
         }
@@ -80,9 +85,9 @@ public class LocalStorageEntityPersistor<T extends NamedEntity & Copyable<T>> im
     public void deleteEntity(T entity) {
         Path entityFilePath = getEntityFilePath(entity.getId());
         try {
-            Files.delete(entityFilePath);
+            storageFileSystem.deleteFile(entityFilePath);
         } catch (IOException e) {
-            throw new StoragePathInvalidException("Error in deleting file " + entityFilePath.getFileName());
+            throw new RuntimeException(e);
         }
     }
 

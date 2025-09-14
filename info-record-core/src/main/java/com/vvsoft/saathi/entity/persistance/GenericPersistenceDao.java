@@ -18,7 +18,7 @@ public class GenericPersistenceDao<T extends NamedEntity & Copyable<T>> implemen
     private final List<T> cache = new ArrayList<>();
     private final EntityPersistor<T> entityPersistor;
 
-    public GenericPersistenceDao(EntityPersistor<T> entityPersistor, boolean loadOnStartup) {
+    public GenericPersistenceDao(EntityPersistor<T> entityPersistor, boolean loadOnStartup) throws IOException {
         this.entityPersistor = entityPersistor;
         entityPersistor.initialize();
         if(loadOnStartup)

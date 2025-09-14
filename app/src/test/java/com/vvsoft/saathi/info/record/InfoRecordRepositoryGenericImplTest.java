@@ -4,7 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vvsoft.saathi.entity.dao.exception.EntityAlreadyExistsException;
 import com.vvsoft.saathi.entity.dao.exception.EntityNotFoundException;
 import com.vvsoft.saathi.entity.persistance.GenericPersistenceDao;
-import com.vvsoft.saathi.info.persistance.LocalStorageEntityPersistor;
+import com.vvsoft.saathi.entity.persistance.LocalDiskStorageFileSystem;
+import com.vvsoft.saathi.info.persistance.FileBasedEntityPersistor;
 import com.vvsoft.saathi.info.record.model.InfoRecord;
 import com.vvsoft.saathi.info.record.model.RecordValue;
 import com.vvsoft.saathi.info.record.model.SimpleRecordValue;
@@ -142,7 +143,10 @@ class InfoRecordRepositoryGenericImplTest {
         InfoRecord resultRecord = infoRecordRepository.create(infoRecord);
         RecordValue resultRecordValue = resultRecord.getRecordValue();
         assertEquals("bar",resultRecordValue.getValue("Name").get());
-        GenericPersistenceDao<InfoRecord> dao = new GenericPersistenceDao<>(new LocalStorageEntityPersistor<InfoRecord>(storageUtil.getRecordStoragePath(), new ObjectMapper(),"record"), true);
+        GenericPersistenceDao<InfoRecord> dao = new GenericPersistenceDao<>(new FileBasedEntityPersistor<InfoRecord>(storageUtil.getRecordStoragePath(),
+                new ObjectMapper(),
+                "record",
+                new LocalDiskStorageFileSystem()), true);
         InfoRecordRepositoryGenericImpl repo = new InfoRecordRepositoryGenericImpl(dao);
         Optional<InfoRecord> record = repo.find(recordName);
         assertEquals(recordName,record.get().getName());

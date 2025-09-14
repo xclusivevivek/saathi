@@ -4,7 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vvsoft.saathi.entity.dao.GenericDao;
 import com.vvsoft.saathi.entity.persistance.EntityPersistor;
 import com.vvsoft.saathi.entity.persistance.GenericPersistenceDao;
-import com.vvsoft.saathi.info.persistance.LocalStorageEntityPersistor;
+import com.vvsoft.saathi.entity.persistance.LocalDiskStorageFileSystem;
+import com.vvsoft.saathi.info.persistance.FileBasedEntityPersistor;
 import com.vvsoft.saathi.info.record.crud.InfoRecordCrudService;
 import com.vvsoft.saathi.info.record.crud.InfoRecordRepository;
 import com.vvsoft.saathi.info.record.crud.InfoRecordRepositoryGenericImpl;
@@ -26,7 +27,7 @@ public class InfoRecordConfiguration {
 
     @Bean
     public EntityPersistor<InfoRecord> recordEntityPersistor(){
-        return new LocalStorageEntityPersistor<InfoRecord>(schemaStoragePath,new ObjectMapper(),"record");
+        return new FileBasedEntityPersistor<InfoRecord>(schemaStoragePath,new ObjectMapper(),"record",new LocalDiskStorageFileSystem());
     }
 
     @Bean

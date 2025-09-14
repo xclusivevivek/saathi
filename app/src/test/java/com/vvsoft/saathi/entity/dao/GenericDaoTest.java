@@ -5,7 +5,8 @@ import com.vvsoft.saathi.entity.NamedEntityTestDouble;
 import com.vvsoft.saathi.entity.dao.exception.EntityAlreadyExistsException;
 import com.vvsoft.saathi.entity.dao.exception.EntityNotFoundException;
 import com.vvsoft.saathi.entity.persistance.GenericPersistenceDao;
-import com.vvsoft.saathi.info.persistance.LocalStorageEntityPersistor;
+import com.vvsoft.saathi.entity.persistance.LocalDiskStorageFileSystem;
+import com.vvsoft.saathi.info.persistance.FileBasedEntityPersistor;
 import com.vvsoft.saathi.test.util.StorageUtil;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -23,7 +24,9 @@ class GenericDaoTest {
 
     @BeforeEach
     public void setup() throws IOException {
-        genericDao = new GenericPersistenceDao<>(new LocalStorageEntityPersistor<NamedEntityTestDouble>(STORAGE_PATH,new ObjectMapper(),"entity"));
+        genericDao = new GenericPersistenceDao<>(new FileBasedEntityPersistor<NamedEntityTestDouble>(STORAGE_PATH,
+                new ObjectMapper(),
+                "entity",new LocalDiskStorageFileSystem()));
     }
 
     @AfterEach

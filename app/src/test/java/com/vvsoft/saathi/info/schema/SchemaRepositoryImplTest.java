@@ -4,7 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vvsoft.saathi.entity.dao.exception.EntityAlreadyExistsException;
 import com.vvsoft.saathi.entity.dao.exception.EntityNotFoundException;
 import com.vvsoft.saathi.entity.persistance.GenericPersistenceDao;
-import com.vvsoft.saathi.info.persistance.LocalStorageEntityPersistor;
+import com.vvsoft.saathi.entity.persistance.LocalDiskStorageFileSystem;
+import com.vvsoft.saathi.info.persistance.FileBasedEntityPersistor;
 import com.vvsoft.saathi.info.schema.crud.SchemaRepository;
 import com.vvsoft.saathi.info.schema.crud.SchemaRepositoryImpl;
 import com.vvsoft.saathi.info.schema.presentation.InfoSchemaDto;
@@ -20,7 +21,6 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 class SchemaRepositoryImplTest {
     private final String path = "data/test/" + this.getClass().getName();
@@ -29,7 +29,7 @@ class SchemaRepositoryImplTest {
 
     @BeforeEach
     void setupTest() throws IOException {
-        schemaRepository = new SchemaRepositoryImpl(new GenericPersistenceDao<>(new LocalStorageEntityPersistor<InfoSchema>(path,new ObjectMapper(),"schema")));
+        schemaRepository = new SchemaRepositoryImpl(new GenericPersistenceDao<>(new FileBasedEntityPersistor<InfoSchema>(path,new ObjectMapper(),"schema",new LocalDiskStorageFileSystem())));
     }
 
     @AfterEach
