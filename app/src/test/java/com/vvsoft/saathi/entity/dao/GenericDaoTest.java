@@ -1,15 +1,12 @@
 package com.vvsoft.saathi.entity.dao;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vvsoft.saathi.entity.NamedEntity;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.vvsoft.saathi.entity.NamedEntityTestDouble;
 import com.vvsoft.saathi.entity.dao.exception.EntityAlreadyExistsException;
 import com.vvsoft.saathi.entity.dao.exception.EntityNotFoundException;
-import com.vvsoft.saathi.info.persistance.GenericLocalStorageDao;
-import com.vvsoft.saathi.info.schema.model.Copyable;
+import com.vvsoft.saathi.entity.persistance.GenericPersistenceDao;
+import com.vvsoft.saathi.info.persistance.LocalStorageEntityPersistor;
 import com.vvsoft.saathi.test.util.StorageUtil;
-import lombok.Getter;
-import lombok.Setter;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,7 +23,7 @@ class GenericDaoTest {
 
     @BeforeEach
     public void setup() throws IOException {
-        genericDao = new GenericLocalStorageDao<>(STORAGE_PATH, "entity");
+        genericDao = new GenericPersistenceDao<>(new LocalStorageEntityPersistor<NamedEntityTestDouble>(STORAGE_PATH,new ObjectMapper(),"entity"));
     }
 
     @AfterEach
@@ -126,29 +123,6 @@ class GenericDaoTest {
         List<NamedEntityTestDouble> entities = genericDao.getAll();
         Assertions.assertTrue(entities.contains(entity1));
         Assertions.assertTrue(entities.contains(entity2));
-    }
-
-    public static class NamedEntityTestDouble extends NamedEntity implements Copyable<NamedEntityTestDouble>{
-        @Getter
-        @Setter
-        private String data;
-
-        @JsonCreator
-        public NamedEntityTestDouble(@JsonProperty("name") String name) {
-            super(name);
-        }
-
-        public NamedEntityTestDouble(String name,String data) {
-            this(name);
-            this.data = data;
-        }
-
-        @Override
-        public NamedEntityTestDouble copy() {
-            NamedEntityTestDouble entity = new NamedEntityTestDouble(this.getName(), this.getData());
-            entity.setId(this.getId());
-            return entity;
-        }
     }
 
 }

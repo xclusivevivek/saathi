@@ -1,12 +1,15 @@
 package com.vvsoft.saathi.info.record;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vvsoft.saathi.entity.dao.GenericDao;
-import com.vvsoft.saathi.info.persistance.GenericLocalStorageDao;
-import com.vvsoft.saathi.info.record.model.InfoRecord;
+import com.vvsoft.saathi.entity.persistance.EntityPersistor;
+import com.vvsoft.saathi.entity.persistance.GenericPersistenceDao;
+import com.vvsoft.saathi.info.persistance.LocalStorageEntityPersistor;
 import com.vvsoft.saathi.info.record.crud.InfoRecordCrudService;
 import com.vvsoft.saathi.info.record.crud.InfoRecordRepository;
 import com.vvsoft.saathi.info.record.crud.InfoRecordRepositoryGenericImpl;
 import com.vvsoft.saathi.info.record.crud.InfoRecordServiceImpl;
+import com.vvsoft.saathi.info.record.model.InfoRecord;
 import com.vvsoft.saathi.info.schema.crud.SchemaRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -22,12 +25,17 @@ public class InfoRecordConfiguration {
     private boolean loadOnStartup;
 
     @Bean
-    public GenericDao<InfoRecord> getInfoRecordDao() throws IOException {
-        return new GenericLocalStorageDao<>(schemaStoragePath,"record",loadOnStartup);
+    public EntityPersistor<InfoRecord> recordEntityPersistor(){
+        return new LocalStorageEntityPersistor<InfoRecord>(schemaStoragePath,new ObjectMapper(),"record");
     }
 
     @Bean
-    public InfoRecordCrudService getInfoRecordCrudService(InfoRecordRepository infoRecordRepository, SchemaRepository schemaRepository) throws IOException {
+    public GenericDao<InfoRecord> getInfoRecordDao(EntityPersistor<InfoRecord> recordEntityPersistor) throws IOException {
+        return new GenericPersistenceDao<>(recordEntityPersistor,loadOnStartup);
+    }
+
+    @Bean
+    public InfoRecordCrudService getInfoRecordCrudService(InfoRecordRepository infoRecordRepository, SchemaRepository schemaRepository) {
         return new InfoRecordServiceImpl(infoRecordRepository,schemaRepository);
     }
 

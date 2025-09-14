@@ -1,8 +1,10 @@
 package com.vvsoft.saathi.info.schema;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vvsoft.saathi.entity.dao.exception.EntityAlreadyExistsException;
 import com.vvsoft.saathi.entity.dao.exception.EntityNotFoundException;
-import com.vvsoft.saathi.info.persistance.GenericLocalStorageDao;
+import com.vvsoft.saathi.entity.persistance.GenericPersistenceDao;
+import com.vvsoft.saathi.info.persistance.LocalStorageEntityPersistor;
 import com.vvsoft.saathi.info.schema.crud.SchemaRepository;
 import com.vvsoft.saathi.info.schema.crud.SchemaRepositoryImpl;
 import com.vvsoft.saathi.info.schema.presentation.InfoSchemaDto;
@@ -27,7 +29,7 @@ class SchemaRepositoryImplTest {
 
     @BeforeEach
     void setupTest() throws IOException {
-        schemaRepository = new SchemaRepositoryImpl(new GenericLocalStorageDao<>(path,"schema"));
+        schemaRepository = new SchemaRepositoryImpl(new GenericPersistenceDao<>(new LocalStorageEntityPersistor<InfoSchema>(path,new ObjectMapper(),"schema")));
     }
 
     @AfterEach
@@ -105,7 +107,7 @@ class SchemaRepositoryImplTest {
         schemaRepository.create(foo.toSchema());
         schemaRepository.create(bar.toSchema());
         List<InfoSchema> all = schemaRepository.findAll();
-        List<String> names = all.stream().map(InfoSchema::getName).collect(Collectors.toList());
+        List<String> names = all.stream().map(InfoSchema::getName).toList();
         Assertions.assertTrue(names.contains("foo"));
         Assertions.assertTrue(names.contains("bar"));
     }
