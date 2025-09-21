@@ -1,10 +1,14 @@
 package com.vvsoft.saathi.info.record;
 
+import com.dropbox.core.DbxRequestConfig;
+import com.dropbox.core.v2.DbxClientV2;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.vvsoft.saathi.drobox.filesystem.DropboxFileSystem;
 import com.vvsoft.saathi.entity.dao.GenericDao;
 import com.vvsoft.saathi.entity.persistance.EntityPersistor;
 import com.vvsoft.saathi.entity.persistance.GenericPersistenceDao;
 import com.vvsoft.saathi.entity.persistance.LocalDiskStorageFileSystem;
+import com.vvsoft.saathi.entity.persistance.StorageFileSystem;
 import com.vvsoft.saathi.info.persistance.FileBasedEntityPersistor;
 import com.vvsoft.saathi.info.record.crud.InfoRecordCrudService;
 import com.vvsoft.saathi.info.record.crud.InfoRecordRepository;
@@ -24,10 +28,24 @@ public class InfoRecordConfiguration {
     private String schemaStoragePath;
     @Value("${app.record.loadOnStartup}")
     private boolean loadOnStartup;
+    @Value("${app.filesystem}")
+    private String fileSystemName;
+    @Value("${app.dropbox.access_token}")
+    private String dropboxAccessToken;
 
     @Bean
-    public EntityPersistor<InfoRecord> recordEntityPersistor(){
-        return new FileBasedEntityPersistor<InfoRecord>(schemaStoragePath,new ObjectMapper(),"record",new LocalDiskStorageFileSystem());
+    public StorageFileSystem storageFileSystem(){
+        if(fileSystemName.equals("DROPBOX")) {
+            DbxRequestConfig requestConfig = DbxRequestConfig.newBuilder("saathi").build();
+            DbxClientV2 dbxClientV2 = new DbxClientV2(requestConfig, dropboxAccessToken);
+            return new DropboxFileSystem(dbxClientV2);
+        }
+        return new LocalDiskStorageFileSystem();
+    }
+
+    @Bean
+    public EntityPersistor<InfoRecord> recordEntityPersistor(StorageFileSystem fileSystem){
+        return new FileBasedEntityPersistor<InfoRecord>(schemaStoragePath,new ObjectMapper(),"record",fileSystem);
     }
 
     @Bean
@@ -44,6 +62,4 @@ public class InfoRecordConfiguration {
     public InfoRecordRepository getInfoRecordRepo(GenericDao<InfoRecord> dao) {
         return new InfoRecordRepositoryGenericImpl(dao);
     }
-
-
 }
